@@ -24,7 +24,7 @@ export class AddContact extends Component {
 
     addContact = (state) =>{
         //console.log(id);
-        axios.post(`http://localhost:8080/api/adddrug`,{
+        axios.post(`http://localhost:8080/api/contacts`,{
             'contactid':state.id,
             'timestamp':state.timestamp,
             'userid1':state.userid1,
