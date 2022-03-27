@@ -8,19 +8,15 @@ export class Tab extends Component {
             <Table striped bordered hover variant="dark">
         <thead>
         <tr>
-      <th className="obj">Drug Name</th>
       <th className="com">Timestamp</th>
-      <th className="com">Holder</th>
-      <th className="date">Location</th>
+      <th className="com">User ID</th>
       </tr>
       </thead>
       <tbody>
-      {this.props.drugs.map((res) => (
+      {this.props.queries.map((res) => (
           <tr key={res.Key}>
-                <td className="obj">{res.Record.drug}</td>
                 <td className="com">{res.Record.timestamp}</td>
-                <td className="com">{res.Record.holder}</td>
-                <td className="date">{res.Record.location}</td>
+                <td className="com">{res.Record.userId}</td>
 
                 </tr>
         ))}
@@ -36,7 +32,7 @@ export class Tab extends Component {
 }
 
 Table.propTypes = {
-    drugs: PropTypes.array
+    queries: PropTypes.array
 }
 
 export default Tab

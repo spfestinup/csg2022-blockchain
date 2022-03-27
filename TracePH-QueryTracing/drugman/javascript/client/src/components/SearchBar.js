@@ -23,13 +23,13 @@ export class SearchBar extends Component {
 
 <Form>
 <Form.Group controlId="formBasicEmail">
-<Form.Label>DrugID</Form.Label>
-<Form.Control type='text' name='id' placeholder='Add Drug ID' value={this.state.id} onChange={this.onChange} />
+<Form.Label>Query ID</Form.Label>
+<Form.Control type='text' name='id' placeholder='Query ID' value={this.state.id} onChange={this.onChange} />
 </Form.Group>
 
 
 <Button variant="primary" type="submit" onClick={this.onSubmit}>
-Search Drug
+Search Query
 </Button>
 </Form>
 </React.Fragment>
