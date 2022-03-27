@@ -9,7 +9,7 @@ const fs = require('fs');
 const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
 const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
 
-app.get('/api/queryalldrugs', async function (req, res) {
+app.get('/api/queries', async function (req, res) {
     try {
 // Create a new file system based wallet for managing identities.
 const walletPath = path.join(process.cwd(), 'wallet');
@@ -37,7 +37,7 @@ const contract = network.getContract('drugs');
 // Evaluate the specified transaction.
 // queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
 // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
-const result = await contract.evaluateTransaction('queryAllDrugs');
+const result = await contract.evaluateTransaction('readQueries');
 console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 res.status(200).json({response: result.toString()});
 // Disconnect from the gateway.
@@ -50,7 +50,7 @@ process.exit(1);
 });
 
 
-app.get('/api/query/:drug_index', async function (req, res) {
+app.get('/api/query/:query_id', async function (req, res) {
     try {
 // Create a new file system based wallet for managing identities.
 const walletPath = path.join(process.cwd(), 'wallet');
@@ -74,7 +74,7 @@ if (!identity) {
 // Evaluate the specified transaction.
         // queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
         // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
-        const result = await contract.evaluateTransaction('queryDrug', req.params.drug_index);
+        const result = await contract.evaluateTransaction('readQuery', req.params.query_id);
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
         return res.status(200).json({response: result.toString()});
         await gateway.disconnect();
@@ -85,7 +85,7 @@ if (!identity) {
     }
 });
 
-app.post('/api/adddrug/', async function (req, res) {
+app.post('/api/queries', async function (req, res) {
     try {
 // Create a new file system based wallet for managing identities.
 const walletPath = path.join(process.cwd(), 'wallet');
@@ -109,7 +109,7 @@ if (!identity) {
 // Submit the specified transaction.
         // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
         // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-        await contract.submitTransaction('createDrug', req.body.drugid, req.body.drugname, req.body.timestamp, req.body.holder, req.body.location);
+        await contract.submitTransaction('createQuery', req.body.queryid, req.body.timestamp, req.body.userid);
         console.log('Transaction has been submitted');
         return res.send('Transaction has been submitted');
 // Disconnect from the gateway.
@@ -120,7 +120,7 @@ if (!identity) {
     }
 })
 
-app.put('/api/changeholder/:drug_index', async function (req, res) {
+app.put('/api/query/:query_id/timestamp', async function (req, res) {
     try {
 // Create a new file system based wallet for managing identities.
 const walletPath = path.join(process.cwd(), 'wallet');
@@ -147,7 +147,7 @@ const contract = network.getContract('drugs');
 // Submit the specified transaction.
         // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
         // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-        await contract.submitTransaction('changeDrugOwner', req.params.drug_index, req.body.holder);
+        await contract.submitTransaction('updateQueryTimestamp', req.params.query_id, req.body.timestamp);
         console.log('Transaction has been submitted');
         return res.send('Transaction has been submitted');
 // Disconnect from the gateway.
@@ -158,7 +158,7 @@ const contract = network.getContract('drugs');
     } 
 })
 
-app.put('/api/changelocation/:drug_index', async function (req, res) {
+app.put('/api/query/:query_id/userid', async function (req, res) {
     try {
 // Create a new file system based wallet for managing identities.
 const walletPath = path.join(process.cwd(), 'wallet');
@@ -185,7 +185,7 @@ const contract = network.getContract('drugs');
 // Submit the specified transaction.
         // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
         // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-        await contract.submitTransaction('changeDrugLocation', req.params.drug_index, req.body.location);
+        await contract.submitTransaction('updateQueryUserId', req.params.query_id, req.body.userid);
         console.log('Transaction has been submitted');
         return res.send('Transaction has been submitted');
 // Disconnect from the gateway.
