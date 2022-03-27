@@ -18,29 +18,28 @@ type SmartContract struct {
 }
 
 // Car describes basic details of what makes up a car
-type Drug struct {
-	DrugName  string `json:"drug"`
+type Contact struct {
 	Timestamp string `json:"timestamp"`
-	Holder  string `json:"holder"`
-	Location  string `json:"location"`
+	UserId1   string `json:"userId1"`
+	UserId2   string `json:"userId2"`
 }
 
 // QueryResult structure used for handling result of query
 type QueryResult struct {
-	Id    string `json:"Id"`
-	Record *Drug
+	Id     string `json:"Id"`
+	Record *Contact
 }
 
 // InitLedger adds a base set of cars to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
-	drugs := []Drug{
-		Drug{DrugName: "Crocin", Timestamp: "12-12-12", Holder: "SunPharma", Location:"Pune"},
-		Drug{DrugName: "Neocirtizine", Timestamp: "13-04-20", Holder: "Fortis", Location:"Delhi"},
+	contacts := []Contact{
+		{Timestamp: "2022-01-24T08:04:05.000Z", UserId1: "93b9c9c1-258b-48ee-9810-3acc49850b4b", UserId2: "878873e3-cbc5-4f35-838c-e3d01e182f13"},
+		{Timestamp: "2022-02-13T10:45:28.000Z", UserId1: "1a25bd3e-8c8e-4a56-a2fe-559fc958168b", UserId2: "eba476aa-348f-46c0-8c45-368039c4b015"},
 	}
 
-	for i, drug := range drugs {
-		drugAsBytes, _ := json.Marshal(drug)
-		err := ctx.GetStub().PutState(strconv.Itoa(i), drugAsBytes)
+	for i, contact := range contacts {
+		contactAsBytes, _ := json.Marshal(contact)
+		err := ctx.GetStub().PutState(strconv.Itoa(i), contactAsBytes)
 
 		if err != nil {
 			return fmt.Errorf("Failed to put to world state. %s", err.Error())
@@ -51,39 +50,38 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 }
 
 // CreateCar adds a new car to the world state with given details
-func (s *SmartContract) CreateDrug(ctx contractapi.TransactionContextInterface, drugNumber string, drugname string, timestamp string, holder string, location string) error {
-	drug := Drug{
-		DrugName:  drugname,
+func (s *SmartContract) CreateContact(ctx contractapi.TransactionContextInterface, contactId string, timestamp string, userId1 string, userId2 string) error {
+	contact := Contact{
 		Timestamp: timestamp,
-		Holder:  holder,
-		Location: location,
+		UserId1:   userId1,
+		UserId2:   userId2,
 	}
 
-	drugAsBytes, _ := json.Marshal(drug)
+	contactAsBytes, _ := json.Marshal(contact)
 
-	return ctx.GetStub().PutState(drugNumber, drugAsBytes)
+	return ctx.GetStub().PutState(contactId, contactAsBytes)
 }
 
 // QueryCar returns the car stored in the world state with given id
-func (s *SmartContract) QueryDrug(ctx contractapi.TransactionContextInterface, drugNumber string) (*Drug, error) {
-	drugAsBytes, err := ctx.GetStub().GetState(drugNumber)
+func (s *SmartContract) QueryContact(ctx contractapi.TransactionContextInterface, contactId string) (*Contact, error) {
+	contactAsBytes, err := ctx.GetStub().GetState(contactId)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to read from world state. %s", err.Error())
 	}
 
-	if drugAsBytes == nil {
-		return nil, fmt.Errorf("%s does not exist", drugNumber)
+	if contactAsBytes == nil {
+		return nil, fmt.Errorf("%s does not exist", contactId)
 	}
 
-	drug := new(Drug)
-	_ = json.Unmarshal(drugAsBytes, drug)
+	contact := new(Contact)
+	_ = json.Unmarshal(contactAsBytes, contact)
 
-	return drug, nil
+	return contact, nil
 }
 
 // QueryAllCars returns all cars found in world state
-func (s *SmartContract) QueryAllDrugs(ctx contractapi.TransactionContextInterface) ([]QueryResult, error) {
+func (s *SmartContract) QueryAllContacts(ctx contractapi.TransactionContextInterface) ([]QueryResult, error) {
 	startId := ""
 	endId := ""
 
@@ -103,10 +101,10 @@ func (s *SmartContract) QueryAllDrugs(ctx contractapi.TransactionContextInterfac
 			return nil, err
 		}
 
-		drug := new(Drug)
-		_ = json.Unmarshal(queryResponse.Value, drug)
+		contact := new(Contact)
+		_ = json.Unmarshal(queryResponse.Value, contact)
 
-		queryResult := QueryResult{Id: queryResponse.Key, Record: drug}
+		queryResult := QueryResult{Id: queryResponse.Key, Record: contact}
 		results = append(results, queryResult)
 	}
 
@@ -114,32 +112,46 @@ func (s *SmartContract) QueryAllDrugs(ctx contractapi.TransactionContextInterfac
 }
 
 // ChangeCarOwner updates the owner field of car with given id in world state
-func (s *SmartContract) ChangeDrugOwner(ctx contractapi.TransactionContextInterface, drugNumber string, newHolder string) error {
-	drug, err := s.QueryDrug(ctx, drugNumber)
+func (s *SmartContract) ChangeContactTimestamp(ctx contractapi.TransactionContextInterface, contactId string, newTimestamp string) error {
+	contact, err := s.QueryContact(ctx, contactId)
 
 	if err != nil {
 		return err
 	}
 
-	drug.Holder = newHolder
+	contact.Timestamp = newTimestamp
 
-	drugAsBytes, _ := json.Marshal(drug)
+	contactAsBytes, _ := json.Marshal(contact)
 
-	return ctx.GetStub().PutState(drugNumber, drugAsBytes)
+	return ctx.GetStub().PutState(contactId, contactAsBytes)
 }
 
-func (s *SmartContract) ChangeDrugLocation(ctx contractapi.TransactionContextInterface, drugNumber string, newLocation string) error {
-	drug, err := s.QueryDrug(ctx, drugNumber)
+func (s *SmartContract) ChangeContactUserId1(ctx contractapi.TransactionContextInterface, contactId string, newUserId string) error {
+	contact, err := s.QueryContact(ctx, contactId)
 
 	if err != nil {
 		return err
 	}
 
-	drug.Location = newLocation
+	contact.UserId1 = newUserId
 
-	drugAsBytes, _ := json.Marshal(drug)
+	contactAsBytes, _ := json.Marshal(contact)
 
-	return ctx.GetStub().PutState(drugNumber, drugAsBytes)
+	return ctx.GetStub().PutState(contactId, contactAsBytes)
+}
+
+func (s *SmartContract) ChangeContactUserId2(ctx contractapi.TransactionContextInterface, contactId string, newUserId string) error {
+	contact, err := s.QueryContact(ctx, contactId)
+
+	if err != nil {
+		return err
+	}
+
+	contact.UserId2 = newUserId
+
+	contactAsBytes, _ := json.Marshal(contact)
+
+	return ctx.GetStub().PutState(contactId, contactAsBytes)
 }
 
 func main() {
