@@ -6,13 +6,13 @@ import {Table} from 'react-bootstrap'
 
 export class Result extends Component {
     state={
-        drugs:{drugname:'',timestamp:'',holder:'',location:''}
+        contacts:{timestamp:'',userId1:'',userId2:''}
     }
 
     search = (id) =>{
         console.log(id);
-        axios.get(`http://localhost:8080/api/query/${id}`)
-        .then(res=> this.setState({drugs: JSON.parse(res.data.response)}));
+        axios.get(`http://localhost:8080/api/contact/${id}`)
+        .then(res=> this.setState({contacts: JSON.parse(res.data.response)}));
       }
 
   render() {
@@ -26,18 +26,16 @@ export class Result extends Component {
       <Table striped bordered hover variant="dark">
       <thead>
         <tr>
-      <th>Drug Name</th>
       <th>Timestamp</th>
-      <th>Holder</th>
-      <th>Location</th>
+      <th>User ID 1</th>
+      <th>User ID 2</th>
       </tr>
       </thead>
         <tbody>
         <tr>
-      <td>{this.state.drugs.drug}</td>
-      <td>{this.state.drugs.timestamp}</td>
-      <td>{this.state.drugs.holder}</td>
-      <td>{this.state.drugs.location}</td>
+      <td>{this.state.contacts.timestamp}</td>
+      <td>{this.state.contacts.userId1}</td>
+      <td>{this.state.contacts.userId2}</td>
       </tr>
       </tbody>
       </Table>

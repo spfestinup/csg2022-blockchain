@@ -2,36 +2,33 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Form,Button } from 'react-bootstrap';
 
-export class AddDrug extends Component {
+export class AddContact extends Component {
     state={
         id:'',
-        drugname:'',
         timestamp:'',
-        holder:'',
-        location:''
+        userid1:'',
+        userid2:''
     }
 
     onChange = (e) => this.setState({ [e.target.name]: e.target.value })
 
     onSubmit = (e) => {
         e.preventDefault();
-        this.addDrug(this.state);
+        this.addContact(this.state);
         this.setState({
-        id:'', 
-        drugname:'',
+        id:'',
         timestamp:'',
-        holder:'',
-        location:''});
+        userid1:'',
+        userid2:''});
     }
 
-    addDrug = (state) =>{
+    addContact = (state) =>{
         //console.log(id);
         axios.post(`http://localhost:8080/api/adddrug`,{
-            'drugid':state.id,
-            'drugname':state.drugname,
+            'contactid':state.id,
             'timestamp':state.timestamp,
-            'holder':state.holder,
-            'location':state.location
+            'userid1':state.userid1,
+            'userid2':state.userid2
         })
       }
 
@@ -42,13 +39,8 @@ export class AddDrug extends Component {
 
     <Form>
   <Form.Group controlId="formBasicEmail">
-    <Form.Label>DrugID</Form.Label>
-    <Form.Control type='text' name='id' placeholder='Add Drug ID' value={this.state.id} onChange={this.onChange} />
-  </Form.Group>
-
-  <Form.Group controlId="formBasicEmail">
-    <Form.Label>Drug Name</Form.Label>
-    <Form.Control type='text' name='drugname' placeholder='Drug Name' value={this.state.drugname} onChange={this.onChange} />
+    <Form.Label>Contact ID</Form.Label>
+    <Form.Control type='text' name='id' placeholder='Add Contact ID' value={this.state.id} onChange={this.onChange} />
   </Form.Group>
 
   <Form.Group controlId="formBasicEmail">
@@ -57,17 +49,17 @@ export class AddDrug extends Component {
   </Form.Group>
 
   <Form.Group controlId="formBasicEmail">
-    <Form.Label>Holder</Form.Label>
-    <Form.Control type='text' name='holder' placeholder='Holder' value={this.state.holder} onChange={this.onChange} />
+    <Form.Label>User ID 1</Form.Label>
+    <Form.Control type='text' name='userid1' placeholder='User ID 1' value={this.state.userid1} onChange={this.onChange} />
   </Form.Group>
 
   <Form.Group controlId="formBasicEmail">
-    <Form.Label>Location</Form.Label>
-    <Form.Control type='text' name='location' placeholder='Location' value={this.state.location} onChange={this.onChange} />
+    <Form.Label>User ID 2</Form.Label>
+    <Form.Control type='text' name='userid2' placeholder='User ID 2' value={this.state.userid2} onChange={this.onChange} />
   </Form.Group>
 
   <Button variant="primary" type="submit" onClick={this.onSubmit}>
-    Add Drug
+    Add Contact
   </Button>
 </Form>
 
@@ -79,4 +71,4 @@ export class AddDrug extends Component {
 }
 
 
-export default AddDrug;
+export default AddContact;

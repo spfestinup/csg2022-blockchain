@@ -3,9 +3,10 @@ import axios from 'axios';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Tab from './components/Table';
 import Result from './components/Result';
-import AddDrug from './components/AddDrug';
-import ChangeHolder from './components/ChangeHolder';
-import ChangeLocation from './components/ChangeLocation';
+import AddContact from './components/AddContact';
+import ChangeTimestamp from './components/ChangeTimestamp';
+import ChangeUserId1 from './components/ChangeUserID1';
+import ChangeUserId2 from './components/ChangeUserID2';
 import Navi from './components/Navi';
 import './App.css';
 
@@ -13,14 +14,14 @@ import './App.css';
 class App extends Component {
 
   state={
-    drugs:[{"Key":"","Record":{"drugname":"","timestamp":"","holder":"","location":""}}]
+    contacts:[{"Id":"","Record":{"timestamp":"","userId1":"","userId2":""}}]
   }
 
 
 
   componentDidMount(){
-    axios.get('http://localhost:8080/api/queryalldrugs') 
-    .then(res => this.setState({drugs: JSON.parse(res.data.response)}))
+    axios.get('http://localhost:8080/api/contacts') 
+    .then(res => this.setState({contacts: JSON.parse(res.data.response)}))
   }
 
  
@@ -37,9 +38,9 @@ class App extends Component {
         <Route exact path='/' render={props=>(
         <React.Fragment>
           <div className='table'>
-          <Tab  drugs={this.state.drugs}  />
+          <Tab  contacts={this.state.contacts}  />
           
-            {console.log(this.state.drugs)}
+            {console.log(this.state.contacts)}
           </div>
         </React.Fragment>
         )}/>
@@ -49,36 +50,45 @@ class App extends Component {
           
          <Result/>
           <div>
-            {console.log(this.state.drugs)}
+            {console.log(this.state.contacts)}
           </div>
         </React.Fragment>
         )}/>
 
-<Route exact path='/addDrug' render={props=>(
+<Route exact path='/addContact' render={props=>(
         <React.Fragment>
           
-         <AddDrug />
+         <AddContact />
           <div>
-            {console.log(this.state.drugs)}
+            {console.log(this.state.contacts)}
           </div>
         </React.Fragment>
         )}/>
 
-<Route exact path='/changeHolder' render={props=>(
+<Route exact path='/changeTimestamp' render={props=>(
         <React.Fragment>
           
-         <ChangeHolder />
+         <ChangeTimestamp />
           <div>
-            {console.log(this.state.drugs)}
+            {console.log(this.state.contacts)}
           </div>
         </React.Fragment>
         )}/>
-<Route exact path='/changeLocation' render={props=>(
+<Route exact path='/changeUserId1' render={props=>(
         <React.Fragment>
           
-         <ChangeLocation />
+         <ChangeUserId1 />
           <div>
-            {console.log(this.state.drugs)}
+            {console.log(this.state.contacts)}
+          </div>
+        </React.Fragment>
+        )}/>
+<Route exact path='/changeUserId2' render={props=>(
+        <React.Fragment>
+          
+         <ChangeUserId2 />
+          <div>
+            {console.log(this.state.contacts)}
           </div>
         </React.Fragment>
         )}/>
