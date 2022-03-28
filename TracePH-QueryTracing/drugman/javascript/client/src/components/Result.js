@@ -6,7 +6,7 @@ import {Table} from 'react-bootstrap'
 
 export class Result extends Component {
     state={
-        queries:{timestamp:'',userId:''}
+        queries:{timestamp:'',userId:'',adminId:''}
     }
 
     search = (id) =>{
@@ -28,12 +28,14 @@ export class Result extends Component {
         <tr>
       <th>Timestamp</th>
       <th>User ID</th>
+      <th>Admin ID</th>
       </tr>
       </thead>
         <tbody>
         <tr>
       <td>{this.state.queries.timestamp}</td>
       <td>{this.state.queries.userId}</td>
+      <td>{this.state.queries.adminId}</td>
       </tr>
       </tbody>
       </Table>

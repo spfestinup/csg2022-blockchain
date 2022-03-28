@@ -6,7 +6,8 @@ export class AddQuery extends Component {
     state={
         id:'',
         timestamp:'',
-        userId:''
+        userId:'',
+        adminId:'',
     }
 
     onChange = (e) => this.setState({ [e.target.name]: e.target.value })
@@ -17,7 +18,8 @@ export class AddQuery extends Component {
         this.setState({
         id:'', 
         timestamp:'',
-        userId:''});
+        userId:'',
+        adminId:''});
     }
 
     addQuery = (state) =>{
@@ -25,7 +27,8 @@ export class AddQuery extends Component {
         axios.post(`http://localhost:8080/api/queries`,{
             'queryid':state.id,
             'timestamp':state.timestamp,
-            'userid':state.userId
+            'userid':state.userId,
+            'adminid':state.adminId
         })
       }
 
@@ -48,6 +51,11 @@ export class AddQuery extends Component {
   <Form.Group controlId="formBasicEmail">
     <Form.Label>User ID</Form.Label>
     <Form.Control type='text' name='userid' placeholder='User ID' value={this.state.userId} onChange={this.onChange} />
+  </Form.Group>
+
+  <Form.Group controlId="formBasicEmail">
+    <Form.Label>Admin ID</Form.Label>
+    <Form.Control type='text' name='admin' placeholder='Admin ID' value={this.state.adminId} onChange={this.onChange} />
   </Form.Group>
 
   <Button variant="primary" type="submit" onClick={this.onSubmit}>

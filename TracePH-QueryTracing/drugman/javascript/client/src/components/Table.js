@@ -10,6 +10,7 @@ export class Tab extends Component {
         <tr>
       <th className="com">Timestamp</th>
       <th className="com">User ID</th>
+      <th className="com">Admin ID</th>
       </tr>
       </thead>
       <tbody>
@@ -17,6 +18,7 @@ export class Tab extends Component {
           <tr key={res.Key}>
                 <td className="com">{res.Record.timestamp}</td>
                 <td className="com">{res.Record.userId}</td>
+                <td className="com">{res.Record.adminId}</td>
 
                 </tr>
         ))}

@@ -13,7 +13,7 @@ import './App.css';
 class App extends Component {
 
   state={
-    queries:[{"Key":"","Record":{"timestamp":"","userId":""}}]
+    queries:[{"Key":"","Record":{"timestamp":"","userId":"","adminId":""}}]
   }
 
 
