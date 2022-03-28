@@ -18,28 +18,29 @@ type SmartContract struct {
 }
 
 // Car describes basic details of what makes up a car
-type Contact struct {
-	Timestamp string `json:"timestamp"`
-	UserId1   string `json:"userId1"`
-	UserId2   string `json:"userId2"`
+type User struct {
+	UserId   string `json:"userId"`
+	Location string `json:"location"`
+	Phone    string `json:"phone"`
+	Email    string `json:"email"`
 }
 
 // QueryResult structure used for handling result of query
 type QueryResult struct {
 	Id     string `json:"Id"`
-	Record *Contact
+	Record *User
 }
 
 // InitLedger adds a base set of cars to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
-	contacts := []Contact{
-		{Timestamp: "2022-01-24T08:04:05.000Z", UserId1: "93b9c9c1-258b-48ee-9810-3acc49850b4b", UserId2: "878873e3-cbc5-4f35-838c-e3d01e182f13"},
-		{Timestamp: "2022-02-13T10:45:28.000Z", UserId1: "1a25bd3e-8c8e-4a56-a2fe-559fc958168b", UserId2: "eba476aa-348f-46c0-8c45-368039c4b015"},
+	users := []User{
+		{UserId: "93b9c9c1-258b-48ee-9810-3acc49850b4b", Location: "Baclaran", Phone: "09123456789", Email: "testemail@gmail.com"},
+		{UserId: "1a25bd3e-8c8e-4a56-a2fe-559fc958168b", Location: "Quezon City", Phone: "090987654321", Email: "testemail2@hotmail.com"},
 	}
 
-	for i, contact := range contacts {
-		contactAsBytes, _ := json.Marshal(contact)
-		err := ctx.GetStub().PutState(strconv.Itoa(i), contactAsBytes)
+	for i, user := range users {
+		userAsBytes, _ := json.Marshal(user)
+		err := ctx.GetStub().PutState(strconv.Itoa(i), userAsBytes)
 
 		if err != nil {
 			return fmt.Errorf("Failed to put to world state. %s", err.Error())
@@ -50,38 +51,39 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 }
 
 // CreateCar adds a new car to the world state with given details
-func (s *SmartContract) CreateContact(ctx contractapi.TransactionContextInterface, contactId string, timestamp string, userId1 string, userId2 string) error {
-	contact := Contact{
-		Timestamp: timestamp,
-		UserId1:   userId1,
-		UserId2:   userId2,
+func (s *SmartContract) CreateUser(ctx contractapi.TransactionContextInterface, userId string, location string, phone string, email string) error {
+	user := User{
+		UserId:   userId,
+		Location: location,
+		Phone:    phone,
+		Email:    email,
 	}
 
-	contactAsBytes, _ := json.Marshal(contact)
+	userAsBytes, _ := json.Marshal(user)
 
-	return ctx.GetStub().PutState(contactId, contactAsBytes)
+	return ctx.GetStub().PutState(userId, userAsBytes)
 }
 
 // QueryCar returns the car stored in the world state with given id
-func (s *SmartContract) QueryContact(ctx contractapi.TransactionContextInterface, contactId string) (*Contact, error) {
-	contactAsBytes, err := ctx.GetStub().GetState(contactId)
+func (s *SmartContract) QueryUser(ctx contractapi.TransactionContextInterface, userId string) (*User, error) {
+	userAsBytes, err := ctx.GetStub().GetState(userId)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to read from world state. %s", err.Error())
 	}
 
-	if contactAsBytes == nil {
-		return nil, fmt.Errorf("%s does not exist", contactId)
+	if userAsBytes == nil {
+		return nil, fmt.Errorf("%s does not exist", userId)
 	}
 
-	contact := new(Contact)
-	_ = json.Unmarshal(contactAsBytes, contact)
+	user := new(User)
+	_ = json.Unmarshal(userAsBytes, user)
 
-	return contact, nil
+	return user, nil
 }
 
 // QueryAllCars returns all cars found in world state
-func (s *SmartContract) QueryAllContacts(ctx contractapi.TransactionContextInterface) ([]QueryResult, error) {
+func (s *SmartContract) QueryAllUsers(ctx contractapi.TransactionContextInterface) ([]QueryResult, error) {
 	startId := ""
 	endId := ""
 
@@ -101,10 +103,10 @@ func (s *SmartContract) QueryAllContacts(ctx contractapi.TransactionContextInter
 			return nil, err
 		}
 
-		contact := new(Contact)
-		_ = json.Unmarshal(queryResponse.Value, contact)
+		user := new(User)
+		_ = json.Unmarshal(queryResponse.Value, user)
 
-		queryResult := QueryResult{Id: queryResponse.Key, Record: contact}
+		queryResult := QueryResult{Id: queryResponse.Key, Record: user}
 		results = append(results, queryResult)
 	}
 
@@ -112,46 +114,46 @@ func (s *SmartContract) QueryAllContacts(ctx contractapi.TransactionContextInter
 }
 
 // ChangeCarOwner updates the owner field of car with given id in world state
-func (s *SmartContract) ChangeContactTimestamp(ctx contractapi.TransactionContextInterface, contactId string, newTimestamp string) error {
-	contact, err := s.QueryContact(ctx, contactId)
+func (s *SmartContract) ChangeContactLocation(ctx contractapi.TransactionContextInterface, userId string, newLocation string) error {
+	user, err := s.QueryUser(ctx, userId)
 
 	if err != nil {
 		return err
 	}
 
-	contact.Timestamp = newTimestamp
+	user.Location = newLocation
 
-	contactAsBytes, _ := json.Marshal(contact)
+	userAsBytes, _ := json.Marshal(user)
 
-	return ctx.GetStub().PutState(contactId, contactAsBytes)
+	return ctx.GetStub().PutState(userId, userAsBytes)
 }
 
-func (s *SmartContract) ChangeContactUserId1(ctx contractapi.TransactionContextInterface, contactId string, newUserId string) error {
-	contact, err := s.QueryContact(ctx, contactId)
+func (s *SmartContract) ChangeContactPhone(ctx contractapi.TransactionContextInterface, userId string, newPhone string) error {
+	user, err := s.QueryUser(ctx, userId)
 
 	if err != nil {
 		return err
 	}
 
-	contact.UserId1 = newUserId
+	user.Phone = newPhone
 
-	contactAsBytes, _ := json.Marshal(contact)
+	userAsBytes, _ := json.Marshal(user)
 
-	return ctx.GetStub().PutState(contactId, contactAsBytes)
+	return ctx.GetStub().PutState(userId, userAsBytes)
 }
 
-func (s *SmartContract) ChangeContactUserId2(ctx contractapi.TransactionContextInterface, contactId string, newUserId string) error {
-	contact, err := s.QueryContact(ctx, contactId)
+func (s *SmartContract) ChangeContactEmail(ctx contractapi.TransactionContextInterface, userId string, newEmail string) error {
+	user, err := s.QueryUser(ctx, userId)
 
 	if err != nil {
 		return err
 	}
 
-	contact.UserId2 = newUserId
+	user.Email = newEmail
 
-	contactAsBytes, _ := json.Marshal(contact)
+	userAsBytes, _ := json.Marshal(user)
 
-	return ctx.GetStub().PutState(contactId, contactAsBytes)
+	return ctx.GetStub().PutState(userId, userAsBytes)
 }
 
 func main() {
