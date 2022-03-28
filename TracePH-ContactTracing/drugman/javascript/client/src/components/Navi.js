@@ -7,7 +7,7 @@ export class Navi extends Component {
   render() {
     return (
         <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="/">Users</Navbar.Brand>
+        <Navbar.Brand href="/">User Tracing</Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="/search">Search User</Nav.Link>
           {/* <Nav.Link href="/changeTimestamp">Change Timestamp</Nav.Link>

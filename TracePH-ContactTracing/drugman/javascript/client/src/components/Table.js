@@ -15,7 +15,7 @@ export class Tab extends Component {
       </tr>
       </thead>
       <tbody>
-      {this.props.contacts.map((res) => (
+      {this.props.users.map((res) => (
           <tr key={res.Key}>
                 <td className="com">{res.Record.userId}</td>
                 <td className="com">{res.Record.location}</td>
