@@ -36,7 +36,7 @@ export class ChangeUserID extends Component {
 
 <Form.Group controlId="formBasicEmail">
 <Form.Label>User ID</Form.Label>
-<Form.Control type='text' name='userid' placeholder='User ID' value={this.state.userId} onChange={this.onChange} />
+<Form.Control type='text' name='userId' placeholder='User ID' value={this.state.userId} onChange={this.onChange} />
 </Form.Group>
 
 

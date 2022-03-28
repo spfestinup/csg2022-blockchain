@@ -50,12 +50,12 @@ export class AddQuery extends Component {
 
   <Form.Group controlId="formBasicEmail">
     <Form.Label>User ID</Form.Label>
-    <Form.Control type='text' name='userid' placeholder='User ID' value={this.state.userId} onChange={this.onChange} />
+    <Form.Control type='text' name='userId' placeholder='User ID' value={this.state.userid } onChange={this.onChange} />
   </Form.Group>
 
   <Form.Group controlId="formBasicEmail">
     <Form.Label>Admin ID</Form.Label>
-    <Form.Control type='text' name='admin' placeholder='Admin ID' value={this.state.adminId} onChange={this.onChange} />
+    <Form.Control type='text' name='adminId' placeholder='Admin ID' value={this.state.adminId} onChange={this.onChange} />
   </Form.Group>
 
   <Button variant="primary" type="submit" onClick={this.onSubmit}>
