@@ -10,8 +10,8 @@ export class Navi extends Component {
         <Navbar.Brand href="/">Query Tracing</Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="/search">Search</Nav.Link>
-          <Nav.Link href="/changeTimestamp">Change Timestamp</Nav.Link>
-          <Nav.Link href="/changeUserId">Change User ID</Nav.Link>
+          {/* <Nav.Link href="/changeTimestamp">Change Timestamp</Nav.Link> */}
+          {/* <Nav.Link href="/changeUserId">Change User ID</Nav.Link> */}
           <Nav.Link href="/addQuery">Add Query</Nav.Link>
         </Nav>
       </Navbar>
