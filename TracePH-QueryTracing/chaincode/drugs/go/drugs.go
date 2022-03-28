@@ -21,6 +21,7 @@ type SmartContract struct {
 type Query struct {
 	Timestamp string `json:"timestamp"`
 	UserId    string `json:"userId"`
+	AdminId   string `json:"adminId"`
 }
 
 // QueryResult structure used for handling result of query
@@ -32,8 +33,8 @@ type QueryResult struct {
 // InitLedger adds a base set of cars to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	queries := []Query{
-		{Timestamp: "2022-01-27T21:01:31Z", UserId: "3d030450-84a7-4033-980b-714c491a42b4"},
-		{Timestamp: "2022-03-19T16:38:05Z", UserId: "45641061-6e29-4a0c-806b-c9e4cade47c1"},
+		{Timestamp: "2022-01-27T21:01:31Z", UserId: "3d030450-84a7-4033-980b-714c491a42b4", AdminId: "0dc90cac-1fca-4db4-be7b-d2bc71adb0dd"},
+		{Timestamp: "2022-03-19T16:38:05Z", UserId: "45641061-6e29-4a0c-806b-c9e4cade47c1", AdminId: "b439da13-043e-43f5-b277-723c389a0923"},
 	}
 
 	for i, query := range queries {
@@ -49,10 +50,11 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 }
 
 // CreateCar adds a new car to the world state with given details
-func (s *SmartContract) CreateQuery(ctx contractapi.TransactionContextInterface, queryId string, timestamp string, userId string) error {
+func (s *SmartContract) CreateQuery(ctx contractapi.TransactionContextInterface, queryId string, timestamp string, userId string, adminId string) error {
 	query := Query{
 		Timestamp: timestamp,
 		UserId:    userId,
+		AdminId:   adminId,
 	}
 
 	queryAsBytes, _ := json.Marshal(query)
