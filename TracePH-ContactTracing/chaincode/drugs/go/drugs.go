@@ -114,7 +114,7 @@ func (s *SmartContract) QueryAllUsers(ctx contractapi.TransactionContextInterfac
 }
 
 // ChangeCarOwner updates the owner field of car with given id in world state
-func (s *SmartContract) ChangeContactLocation(ctx contractapi.TransactionContextInterface, userId string, newLocation string) error {
+func (s *SmartContract) ChangeUserLocation(ctx contractapi.TransactionContextInterface, userId string, newLocation string) error {
 	user, err := s.QueryUser(ctx, userId)
 
 	if err != nil {
@@ -128,7 +128,7 @@ func (s *SmartContract) ChangeContactLocation(ctx contractapi.TransactionContext
 	return ctx.GetStub().PutState(userId, userAsBytes)
 }
 
-func (s *SmartContract) ChangeContactPhone(ctx contractapi.TransactionContextInterface, userId string, newPhone string) error {
+func (s *SmartContract) ChangeUserPhone(ctx contractapi.TransactionContextInterface, userId string, newPhone string) error {
 	user, err := s.QueryUser(ctx, userId)
 
 	if err != nil {
@@ -142,7 +142,7 @@ func (s *SmartContract) ChangeContactPhone(ctx contractapi.TransactionContextInt
 	return ctx.GetStub().PutState(userId, userAsBytes)
 }
 
-func (s *SmartContract) ChangeContactEmail(ctx contractapi.TransactionContextInterface, userId string, newEmail string) error {
+func (s *SmartContract) ChangeUserEmail(ctx contractapi.TransactionContextInterface, userId string, newEmail string) error {
 	user, err := s.QueryUser(ctx, userId)
 
 	if err != nil {
