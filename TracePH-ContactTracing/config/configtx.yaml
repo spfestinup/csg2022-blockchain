@@ -200,7 +200,7 @@ Application: &ApplicationDefaults
         # ACL policy for cscc's "SimulateConfigTreeUpdate" function
         cscc/SimulateConfigTreeUpdate: /Channel/Application/Readers
 
-        #---Miscellanesous peer function to policy mapping for access control---#
+        #---Miscellaneous peer function to policy mapping for access control---#
 
         # ACL policy for invoking chaincodes on peer
         peer/Propose: /Channel/Application/Writers
@@ -290,6 +290,8 @@ Orderer: &OrdererDefaults
         # this value will be rejected by ordering. If the "kafka" OrdererType is
         # selected, set 'message.max.bytes' and 'replica.fetch.max.bytes' on
         # the Kafka brokers to a value that is larger than this one.
+        # Based on networking configuration the value needs to be tuned. With
+        # default 100 MB node grpc msg configuration, 49 MB is the max can be set.
         AbsoluteMaxBytes: 10 MB
 
         # Preferred Max Bytes: The preferred maximum number of bytes allowed
@@ -485,8 +487,8 @@ Profiles:
     SampleInsecureKafka:
         <<: *ChannelDefaults
         Orderer:
-            OrdererType: kafka
             <<: *OrdererDefaults
+            OrdererType: kafka
         Consortiums:
             SampleConsortium:
                 Organizations:
