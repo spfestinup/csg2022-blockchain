@@ -55,7 +55,7 @@ To make use of available branches, create a local branch from `main` and merge a
 
 ## Troubleshooting
 
-### Go not found
+### ~~Go not found~~ (merged)
 
 #### Recommended Solution
 
@@ -69,7 +69,7 @@ If running `sudo ./startFabric.sh` fails due to `go` command not found, try runn
 sudo env "PATH=$PATH" ./startFabric.sh
 ```
 
-### Chaincode invoke fails to run due to endorsement issues
+### ~~Chaincode invoke fails to run due to endorsement issues~~ (merged)
 
 #### Recommended Solution
 
