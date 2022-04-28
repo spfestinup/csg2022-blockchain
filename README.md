@@ -1,5 +1,12 @@
 # Let's goooooo
 ## Steps to run TracePH
+
+### Notes for Windows
+
+1. Use WSL to run this shit
+2. dos2unix everything: ```find . -type f -print0 | xargs -0 dos2unix```
+3. now you can proceed below
+
 ### Navigate to folder needed
 
 ```bash
