@@ -1,12 +1,33 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Table} from 'react-bootstrap'
+import { 
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper 
+} from '@mui/material'
+export default function Tab(props) {
+    const drugs = props.drugs
 
-export default function Tab() {
     return(
-        <div>
-            asdsad
-        </div>
+        <TableContainer component={Paper}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell> Drug Name </TableCell>
+                        <TableCell> Timestamp </TableCell>
+                        <TableCell> Holder </TableCell>
+                        <TableCell> Location </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+
+                </TableBody>
+            </Table>
+        </TableContainer>
     )
 }
 
