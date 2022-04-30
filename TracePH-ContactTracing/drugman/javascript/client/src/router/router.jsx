@@ -1,8 +1,6 @@
 import Home from '../components/Home';
 import Result from '../components/Result';
 import AddDrug from '../components/AddDrug';
-import ChangeHolder from '../components/ChangeHolder';
-import ChangeLocation from '../components/ChangeLocation';
 
 import {
   Routes,
@@ -15,8 +13,6 @@ export default function Router() {
           <Route path="/" element={<Home/>} />
           <Route path="/search" element={<Result/>} />
           <Route path="/addDrug" element={<AddDrug/>} />
-          <Route path="/changeHolder" element={<ChangeHolder/>} />
-          <Route path="/changeLocation" element={<ChangeLocation/>} />
       </Routes>
   )
 }

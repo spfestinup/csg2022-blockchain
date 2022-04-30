@@ -94,8 +94,6 @@ export default function Navi() {
               <MenuItem component={Link} to='/' onClick={handleClose}>My Drugs</MenuItem>
               <MenuItem component={Link} to='/addDrug' onClick={handleClose}>Add Drug</MenuItem>
               <MenuItem component={Link} to='/search' onClick={handleClose}>Search</MenuItem>
-              <MenuItem component={Link} to='/changeHolder' onClick={handleClose}>Change Holder</MenuItem>
-              <MenuItem component={Link} to='/changeLocation' onClick={handleClose}>Change Location</MenuItem>
           </Menu>
           <Typography
             variant="h6"
