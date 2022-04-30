@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import API from '../api/api'
-import Tab from '../components/Table';
+import Home from '../components/Home';
 import Result from '../components/Result';
 import AddDrug from '../components/AddDrug';
 import ChangeHolder from '../components/ChangeHolder';
@@ -45,7 +45,7 @@ export default function Router() {
         <CircularProgress/>:
 
         <Routes>
-            <Route path="/" element={<Tab drugs={drugs}/>} />
+            <Route path="/" element={<Home drugs={drugs}/>} />
             <Route path="/search" element={<Result/>} />
             <Route path="/addDrug" element={<AddDrug/>} />
             <Route path="/changeHolder" element={<ChangeHolder/>} />
@@ -56,76 +56,3 @@ export default function Router() {
   )
 }
 
-// class App extends Component {
-
-//   state={
-//     drugs:[{"Key":"","Record":{"drugname":"","timestamp":"","holder":"","location":""}}]
-//   }
-
-//   componentDidMount(){
-//     axios.get('http://localhost:8080/api/queryalldrugs') 
-//     .then(res => this.setState({drugs: JSON.parse(res.data.response)}))
-//   }
-
-// //   render(){
-//     return (
-//       <div className='container'>
-//         <Navi />
-//       <Router>
-//         <Route exact path='/' render={props=>(
-//         <React.Fragment>
-//           <div className='table'>
-//           <Tab  drugs={this.state.drugs}  />
-          
-//             {console.log(this.state.drugs)}
-//           </div>
-//         </React.Fragment>
-//         )}/>
-
-// <Route exact path='/search' render={props=>(
-//         <React.Fragment>
-          
-//          <Result/>
-//           <div>
-//             {console.log(this.state.drugs)}
-//           </div>
-//         </React.Fragment>
-//         )}/>
-
-// <Route exact path='/addDrug' render={props=>(
-//         <React.Fragment>
-          
-//          <AddDrug />
-//           <div>
-//             {console.log(this.state.drugs)}
-//           </div>
-//         </React.Fragment>
-//         )}/>
-
-// <Route exact path='/changeHolder' render={props=>(
-//         <React.Fragment>
-          
-//          <ChangeHolder />
-//           <div>
-//             {console.log(this.state.drugs)}
-//           </div>
-//         </React.Fragment>
-//         )}/>
-// <Route exact path='/changeLocation' render={props=>(
-//         <React.Fragment>
-          
-//          <ChangeLocation />
-//           <div>
-//             {console.log(this.state.drugs)}
-//           </div>
-//         </React.Fragment>
-//         )}/>
-
-//       </Router>
-//       </div>
-//     );
-//   }
-  
-// }
-
-// export default App;
