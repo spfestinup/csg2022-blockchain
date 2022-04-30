@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SearchBar from './SearchBar';
 import axios from 'axios';
-import '../App.css'
 import {Table} from 'react-bootstrap'
 
 export class Result extends Component {
