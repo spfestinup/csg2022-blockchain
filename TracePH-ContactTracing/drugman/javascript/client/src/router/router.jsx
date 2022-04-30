@@ -27,7 +27,7 @@ export default function Router() {
         const res = await API.getAllDrugs()
         const parsedDrugs = JSON.parse(res.data.response)
         setDrugs(parsedDrugs)
-        console.log("hey")
+
         setLoading(false)
       }
       catch(e) {
@@ -43,15 +43,14 @@ export default function Router() {
     <div>
       {loading?
         <CircularProgress/>:
-        <BrowserRouter>
-          <Routes>
-              <Route path="/" element={<Tab drugs={drugs}/>} />
-              <Route path="/search" element={<Result/>} />
-              <Route path="/addDrug" element={<AddDrug/>} />
-              <Route path="/changeHolder" element={<ChangeHolder/>} />
-              <Route path="/changeLocation" element={<ChangeLocation/>} />
-          </Routes>
-        </BrowserRouter>
+
+        <Routes>
+            <Route path="/" element={<Tab drugs={drugs}/>} />
+            <Route path="/search" element={<Result/>} />
+            <Route path="/addDrug" element={<AddDrug/>} />
+            <Route path="/changeHolder" element={<ChangeHolder/>} />
+            <Route path="/changeLocation" element={<ChangeLocation/>} />
+        </Routes>
       }
     </div>  
   )
