@@ -23,6 +23,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Search, Add } from '@mui/icons-material'
+import InputAdornment from '@mui/material/InputAdornment';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -51,6 +53,7 @@ export default function Home() {
     const [loading, setLoading] = useState(false)
     const [updateLoading, setUpdateLoading] = useState(false)
     const [drugs, setDrugs] = useState([])
+    const [displayeDrugs, setDisplayedDrugs] = useState([])
     const [selectedDrug, setSelectedDrug] = useState({})
     const [newHolder, setNewHolder] = useState('')
     const [newLocation, setNewLocation] = useState('')
@@ -67,8 +70,9 @@ export default function Home() {
             setLoading(true)
             const res = await API.getAllDrugs()
             const parsedDrugs = JSON.parse(res.data.response)
-            await setDrugs(parsedDrugs)
-    
+            setDrugs(parsedDrugs)
+            setDisplayedDrugs(parsedDrugs)
+
             setLoading(false)
           }
           catch(e) {
@@ -80,11 +84,27 @@ export default function Home() {
         queryAllDrugs()
     }, [])
 
+    function searchTermChange(e) {
+      const searchTerm = e.target.value
+
+      const toDisplay = []
+      for(let drug of drugs) {
+        const name = drug.Record.drug
+        const holder = drug.Record.holder
+        const location = drug.Record.location 
+        if(name.includes(searchTerm) || holder.includes(searchTerm) || location.includes(searchTerm)) {
+          toDisplay.push(drug)
+        }
+
+        setDisplayedDrugs(toDisplay)
+      }
+    }
+
     const showDrug = (drug) => (e) => {
       setSelectedDrug(drug)
       setNewHolder(drug.Record.holder)
       setNewLocation(drug.Record.location)
-
+      
       openFormDialog()
     }
 
@@ -117,7 +137,7 @@ export default function Home() {
 
         const res = await API.updateLocation({id: selectedDrug.Id, location: newLocation})
         console.log(res.data)
-        
+
         navigate(0)
       }
       catch(e) {
@@ -128,42 +148,57 @@ export default function Home() {
 
     return(
       <Container>
+        {loading?
+        <CircularProgress/>:
         <Grid container direction="column" rowSpacing={2}>
           <Grid item>
-            <Typography variant="h2">
+            <Typography variant="h2" sx={{mb: 2}}>
               My Drugs
             </Typography>
+            <TextField
+              label="Search"
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={searchTermChange}
+            />
           </Grid>
           <Grid item>
-            {loading?
-              <CircularProgress/>:
-              <TableContainer component={Paper}>
-                  <Table>
-                      <TableHead>
-                          <TableRow>
-                              <StyledTableCell align="center"> Drug ID </StyledTableCell>
-                              <StyledTableCell align="center"> Drug Name </StyledTableCell>
-                              <StyledTableCell align="center"> Timestamp </StyledTableCell>
-                              <StyledTableCell align="center"> Holder </StyledTableCell>
-                              <StyledTableCell align="center"> Location </StyledTableCell>
-                          </TableRow>
-                      </TableHead>
-                      <TableBody>
-                          {drugs.map(drug => (
-                              <StyledTableRow key={drug.Id} onClick={showDrug(drug)}>
-                                  <StyledTableCell align="center"> {drug.Id} </StyledTableCell>
-                                  <StyledTableCell align="center"> {drug.Record.drug} </StyledTableCell>
-                                  <StyledTableCell align="center"> {drug.Record.timestamp} </StyledTableCell>
-                                  <StyledTableCell align="center"> {drug.Record.holder} </StyledTableCell>
-                                  <StyledTableCell align="center"> {drug.Record.location} </StyledTableCell>
-                              </StyledTableRow>
-                          ))}
-                      </TableBody>
-                  </Table>
-              </TableContainer>
-            }
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell align="center"> Drug ID </StyledTableCell>
+                            <StyledTableCell align="center"> Drug Name </StyledTableCell>
+                            <StyledTableCell align="center"> Timestamp </StyledTableCell>
+                            <StyledTableCell align="center"> Holder </StyledTableCell>
+                            <StyledTableCell align="center"> Location </StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {displayeDrugs.map(drug => (
+                            <StyledTableRow key={drug.Id} onClick={showDrug(drug)}>
+                                <StyledTableCell align="center"> {drug.Id} </StyledTableCell>
+                                <StyledTableCell align="center"> {drug.Record.drug} </StyledTableCell>
+                                <StyledTableCell align="center"> {drug.Record.timestamp} </StyledTableCell>
+                                <StyledTableCell align="center"> {drug.Record.holder} </StyledTableCell>
+                                <StyledTableCell align="center"> {drug.Record.location} </StyledTableCell>
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>   
           </Grid>
+          <Grid item>
+                <Button variant="outlined" href="/addDrug" endIcon={<Add/>}> ADD DRUG </Button>
+            </Grid>
         </Grid>
+        }
         <Dialog open={formDialog} fullWidth>
           <DialogTitle> 
             <Typography variant="h4" component='div'>
@@ -176,13 +211,13 @@ export default function Home() {
                 <TextField defaultValue={newHolder} label="Holder" onChange={(e) => {setNewHolder(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
-                <LoadingButton loading={updateLoading} variant="contained" onClick={doUpdateHolder}>UPDATE HOLDER</LoadingButton>
+                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateHolder}>CHANGE HOLDER</LoadingButton>
               </Grid>
               <Grid item sx={{mt: 4}}>
                 <TextField defaultValue={newLocation} label="Location" onChange={(e) => {setNewLocation(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
-                <LoadingButton loading={updateLoading} variant="contained" onClick={doUpdateLocation}>UPDATE LOCATION</LoadingButton>
+                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateLocation}>CHANGE LOCATION</LoadingButton>
               </Grid>
             </Grid>
           </DialogContent>

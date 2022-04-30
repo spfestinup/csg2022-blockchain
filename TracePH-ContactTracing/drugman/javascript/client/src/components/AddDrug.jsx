@@ -74,7 +74,7 @@ export default function AddDrug() {
           <TextField label="Location" variant="outlined" fullWidth onChange={handleChange('location')} />
         </Grid>
         <Grid item>
-          <LoadingButton loading={loading} variant="contained" onClick={doAdd}> ADD DRUG </LoadingButton>
+          <LoadingButton loading={loading} variant="contained" color="success" onClick={doAdd}> SUBMIT </LoadingButton>
         </Grid>
       </Grid>
     </Container>
