@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Form,Button } from 'react-bootstrap';
 
-export class ChangeLocation extends Component {
+export class ChangeUserID extends Component {
     state={
         id:'',
-        location:''
+        userId:''
     }
 
     onChange = (e) => this.setState({ [e.target.name]: e.target.value })
@@ -13,13 +13,13 @@ export class ChangeLocation extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         this.changeLocation(this.state);
-        this.setState({ id: '',location:''});
+        this.setState({ id: '',userId:''});
     }
 
     changeLocation = (state) =>{
         //console.log(id);
-        axios.put(`http://localhost:8080/api/changelocation/${state.id}`,{
-            'location':state.location
+        axios.put(`http://localhost:8080/api/query/${state.id}/userid`,{
+            'userid':state.userId
         })
       }
 
@@ -30,19 +30,19 @@ export class ChangeLocation extends Component {
 
 <Form>
 <Form.Group controlId="formBasicEmail">
-<Form.Label>DrugID</Form.Label>
-<Form.Control type='text' name='id' placeholder='Add Drug ID' value={this.state.id} onChange={this.onChange} />
+<Form.Label>Query ID</Form.Label>
+<Form.Control type='text' name='id' placeholder='Query ID' value={this.state.id} onChange={this.onChange} />
 </Form.Group>
 
 <Form.Group controlId="formBasicEmail">
-<Form.Label>Location</Form.Label>
-<Form.Control type='text' name='location' placeholder='Location' value={this.state.location} onChange={this.onChange} />
+<Form.Label>User ID</Form.Label>
+<Form.Control type='text' name='userId' placeholder='User ID' value={this.state.userId} onChange={this.onChange} />
 </Form.Group>
 
 
 
 <Button variant="primary" type="submit" onClick={this.onSubmit}>
-Change Location
+Change User ID
 </Button>
 </Form>
 
@@ -54,4 +54,4 @@ Change Location
 }
 
 
-export default ChangeLocation;
+export default ChangeUserID;

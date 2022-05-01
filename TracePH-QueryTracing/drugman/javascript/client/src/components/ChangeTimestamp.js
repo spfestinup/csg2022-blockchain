@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Form,Button } from 'react-bootstrap';
 
-export class ChangeHolder extends Component {
+export class ChangeTimestmap extends Component {
     state={
         id:'',
-        holder:''
+        timestamp:''
     }
 
     onChange = (e) => this.setState({ [e.target.name]: e.target.value })
@@ -13,13 +13,13 @@ export class ChangeHolder extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         this.changeHolder(this.state);
-        this.setState({ id: '',holder:''});
+        this.setState({ id: '',timestamp:''});
     }
 
     changeHolder = (state) =>{
         //console.log(id);
-        axios.put(`http://localhost:8080/api/changeholder/${state.id}`,{
-            'holder':state.holder
+        axios.put(`http://localhost:8080/api/query/${state.id}/timestamp`,{
+            'timestamp':state.timestamp
         })
       }
 
@@ -30,19 +30,19 @@ export class ChangeHolder extends Component {
 
 <Form>
 <Form.Group controlId="formBasicEmail">
-<Form.Label>DrugID</Form.Label>
-<Form.Control type='text' name='id' placeholder='Add Drug ID' value={this.state.id} onChange={this.onChange} />
+<Form.Label>Query ID</Form.Label>
+<Form.Control type='text' name='id' placeholder='Query ID' value={this.state.id} onChange={this.onChange} />
 </Form.Group>
 
 <Form.Group controlId="formBasicEmail">
-<Form.Label>Holder</Form.Label>
-<Form.Control type='text' name='holder' placeholder='Holder' value={this.state.holder} onChange={this.onChange} />
+<Form.Label>Timestamp</Form.Label>
+<Form.Control type='text' name='timestamp' placeholder='Timestamp' value={this.state.timestamp} onChange={this.onChange} />
 </Form.Group>
 
 
 
 <Button variant="primary" type="submit" onClick={this.onSubmit}>
-Change Holder
+Change Timestamp
 </Button>
 </Form>
 
@@ -54,4 +54,4 @@ Change Holder
 }
 
 
-export default ChangeHolder;
+export default ChangeTimestmap;

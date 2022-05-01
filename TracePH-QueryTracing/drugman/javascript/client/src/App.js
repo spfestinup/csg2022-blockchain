@@ -3,9 +3,9 @@ import axios from 'axios';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Tab from './components/Table';
 import Result from './components/Result';
-import AddDrug from './components/AddDrug';
-import ChangeHolder from './components/ChangeHolder';
-import ChangeLocation from './components/ChangeLocation';
+import AddQuery from './components/AddQuery';
+import ChangeTimestamp from './components/ChangeTimestamp';
+import ChangeUserId from './components/ChangeUserId';
 import Navi from './components/Navi';
 import './App.css';
 
@@ -13,14 +13,14 @@ import './App.css';
 class App extends Component {
 
   state={
-    drugs:[{"Key":"","Record":{"drugname":"","timestamp":"","holder":"","location":""}}]
+    queries:[{"Key":"","Record":{"timestamp":"","userId":"","adminId":""}}]
   }
 
 
 
   componentDidMount(){
-    axios.get('http://localhost:8080/api/queryalldrugs') 
-    .then(res => this.setState({drugs: JSON.parse(res.data.response)}))
+    axios.get('http://localhost:8080/api/queries') 
+    .then(res => this.setState({queries: JSON.parse(res.data.response)}))
   }
 
  
@@ -37,9 +37,9 @@ class App extends Component {
         <Route exact path='/' render={props=>(
         <React.Fragment>
           <div className='table'>
-          <Tab  drugs={this.state.drugs}  />
+          <Tab  queries={this.state.queries}  />
           
-            {console.log(this.state.drugs)}
+            {console.log(this.state.queries)}
           </div>
         </React.Fragment>
         )}/>
@@ -49,36 +49,36 @@ class App extends Component {
           
          <Result/>
           <div>
-            {console.log(this.state.drugs)}
+            {console.log(this.state.queries)}
           </div>
         </React.Fragment>
         )}/>
 
-<Route exact path='/addDrug' render={props=>(
+<Route exact path='/addQuery' render={props=>(
         <React.Fragment>
           
-         <AddDrug />
+         <AddQuery />
           <div>
-            {console.log(this.state.drugs)}
+            {console.log(this.state.queries)}
           </div>
         </React.Fragment>
         )}/>
 
-<Route exact path='/changeHolder' render={props=>(
+<Route exact path='/changeTimestamp' render={props=>(
         <React.Fragment>
           
-         <ChangeHolder />
+         <ChangeTimestamp />
           <div>
-            {console.log(this.state.drugs)}
+            {console.log(this.state.queries)}
           </div>
         </React.Fragment>
         )}/>
-<Route exact path='/changeLocation' render={props=>(
+<Route exact path='/changeUserId' render={props=>(
         <React.Fragment>
           
-         <ChangeLocation />
+         <ChangeUserId />
           <div>
-            {console.log(this.state.drugs)}
+            {console.log(this.state.queries)}
           </div>
         </React.Fragment>
         )}/>
