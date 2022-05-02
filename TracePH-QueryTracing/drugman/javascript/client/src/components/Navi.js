@@ -7,12 +7,12 @@ export class Navi extends Component {
   render() {
     return (
         <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="/">Drug-Channel</Navbar.Brand>
+        <Navbar.Brand href="/">Query Tracing</Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="/search">Search</Nav.Link>
-          <Nav.Link href="/changeHolder">Change Holder</Nav.Link>
-          <Nav.Link href="/changeLocation">Change Location</Nav.Link>
-          <Nav.Link href="/addDrug">Add Drug</Nav.Link>
+          {/* <Nav.Link href="/changeTimestamp">Change Timestamp</Nav.Link> */}
+          {/* <Nav.Link href="/changeUserId">Change User ID</Nav.Link> */}
+          <Nav.Link href="/addQuery">Add Query</Nav.Link>
         </Nav>
       </Navbar>
     );
