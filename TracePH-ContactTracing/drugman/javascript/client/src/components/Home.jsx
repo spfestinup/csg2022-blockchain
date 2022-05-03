@@ -52,10 +52,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function Home() {
     const [loading, setLoading] = useState(false)
     const [updateLoading, setUpdateLoading] = useState(false)
-    const [drugs, setDrugs] = useState([])
-    const [displayeDrugs, setDisplayedDrugs] = useState([])
-    const [selectedDrug, setSelectedDrug] = useState({})
-    const [newHolder, setNewHolder] = useState('')
+    const [users, setUsers] = useState([])
+    const [displayedUsers, setDisplayedUsers] = useState([])
+    const [selectedUser, setSelectedUser] = useState({})
+    const [newEmail, setNewEmail] = useState('')
+    const [newPhone, setNewPhone] = useState('')
     const [newLocation, setNewLocation] = useState('')
     const [formDialog, setFormDialog] = React.useState(false);
 
@@ -65,14 +66,13 @@ export default function Home() {
     useEffect(() => {
         // This is some React trick for useEffect to not show errors
         // https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook
-        async function queryAllDrugs() {
+        async function queryAllUsers() {
           try {
             setLoading(true)
-            const res = await API.getAllDrugs()
-            const parsedDrugs = JSON.parse(res.data.response)
-            setDrugs(parsedDrugs)
-            setDisplayedDrugs(parsedDrugs)
-
+            const res = await API.getAllUsers()
+            const parsedUsers = JSON.parse(res.data.response)
+            setUsers(parsedUsers)
+            setDisplayedUsers(parsedUsers)
             setLoading(false)
           }
           catch(e) {
@@ -81,29 +81,31 @@ export default function Home() {
           }
         }
         
-        queryAllDrugs()
+        queryAllUsers()
     }, [])
 
     function searchTermChange(e) {
-      const searchTerm = e.target.value
+      const searchTerm = e.target.value.toLowerCase()
 
       const toDisplay = []
-      for(let drug of drugs) {
-        const name = drug.Record.drug
-        const holder = drug.Record.holder
-        const location = drug.Record.location 
-        if(name.includes(searchTerm) || holder.includes(searchTerm) || location.includes(searchTerm)) {
-          toDisplay.push(drug)
+      for(let user of users) {
+        const email = user.Record.email.toLowerCase()
+        const phone = user.Record.phone.toLowerCase()
+        const location = user.Record.location.toLowerCase()
+
+        if(email.includes(searchTerm) || phone.includes(searchTerm) || location.includes(searchTerm)) {
+          toDisplay.push(user)
         }
 
-        setDisplayedDrugs(toDisplay)
+        setDisplayedUsers(toDisplay)
       }
     }
 
-    const showDrug = (drug) => (e) => {
-      setSelectedDrug(drug)
-      setNewHolder(drug.Record.holder)
-      setNewLocation(drug.Record.location)
+    const showUser = (user) => (e) => {
+      setSelectedUser(user)
+      setNewEmail(user.Record.email)
+      setNewPhone(user.Record.phone)
+      setNewLocation(user.Record.location)
       
       openFormDialog()
     }
@@ -116,11 +118,26 @@ export default function Home() {
       setFormDialog(false)
     }
 
-    async function doUpdateHolder() {
+    async function doUpdateEmail() {
       try {
         setUpdateLoading(true)
 
-        const res = await API.updateHolder({id: selectedDrug.Id, holder: newHolder})
+        const res = await API.updateEmail({id: selectedUser.Id, email: newEmail})
+        console.log(res.data)
+
+        navigate(0)
+      }
+      catch(e) {
+        setUpdateLoading(false)
+        console.log(e)
+      }
+    }
+
+    async function doUpdatePhone() {
+      try {
+        setUpdateLoading(true)
+
+        const res = await API.updatePhone({id: selectedUser.Id, phone: newPhone})
         console.log(res.data)
 
         navigate(0)
@@ -135,7 +152,7 @@ export default function Home() {
       try {
         setUpdateLoading(true)
 
-        const res = await API.updateLocation({id: selectedDrug.Id, location: newLocation})
+        const res = await API.updateLocation({id: selectedUser.Id, location: newLocation})
         console.log(res.data)
 
         navigate(0)
@@ -153,7 +170,7 @@ export default function Home() {
         <Grid container direction="column" rowSpacing={2}>
           <Grid item>
             <Typography variant="h2" sx={{mb: 2}}>
-              My Drugs
+              Users
             </Typography>
             <TextField
               label="Search"
@@ -173,21 +190,19 @@ export default function Home() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell align="center"> Drug ID </StyledTableCell>
-                            <StyledTableCell align="center"> Drug Name </StyledTableCell>
-                            <StyledTableCell align="center"> Timestamp </StyledTableCell>
-                            <StyledTableCell align="center"> Holder </StyledTableCell>
+                            <StyledTableCell align="center"> User ID </StyledTableCell>
+                            <StyledTableCell align="center"> Email </StyledTableCell>
+                            <StyledTableCell align="center"> Phone </StyledTableCell>
                             <StyledTableCell align="center"> Location </StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {displayeDrugs.map(drug => (
-                            <StyledTableRow key={drug.Id} onClick={showDrug(drug)}>
-                                <StyledTableCell align="center"> {drug.Id} </StyledTableCell>
-                                <StyledTableCell align="center"> {drug.Record.drug} </StyledTableCell>
-                                <StyledTableCell align="center"> {drug.Record.timestamp} </StyledTableCell>
-                                <StyledTableCell align="center"> {drug.Record.holder} </StyledTableCell>
-                                <StyledTableCell align="center"> {drug.Record.location} </StyledTableCell>
+                        {displayedUsers.map(user => (
+                            <StyledTableRow key={user.Id} onClick={showUser(user)}>
+                                <StyledTableCell align="center"> {user.Id} </StyledTableCell>
+                                <StyledTableCell align="center"> {user.Record.email} </StyledTableCell>
+                                <StyledTableCell align="center"> {user.Record.phone} </StyledTableCell>
+                                <StyledTableCell align="center"> {user.Record.location} </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
@@ -195,23 +210,29 @@ export default function Home() {
             </TableContainer>   
           </Grid>
           <Grid item>
-                <Button variant="outlined" href="/addDrug" endIcon={<Add/>}> ADD DRUG </Button>
+                <Button variant="outlined" href="/addUser" endIcon={<Add/>}> ADD USER </Button>
             </Grid>
         </Grid>
         }
         <Dialog open={formDialog} fullWidth>
           <DialogTitle> 
             <Typography variant="h4" component='div'>
-                {selectedDrug?.Record?.drug}
+                Change User Info
             </Typography> 
           </DialogTitle>
           <DialogContent>
             <Grid container direction="column" rowSpacing={2}>
               <Grid item sx={{mt: 1}}>
-                <TextField defaultValue={newHolder} label="Holder" onChange={(e) => {setNewHolder(e.target.value)}} fullWidth></TextField>
+                <TextField defaultValue={newEmail} label="Email" onChange={(e) => {setNewEmail(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
-                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateHolder}>CHANGE HOLDER</LoadingButton>
+                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateEmail}>CHANGE EMAIL</LoadingButton>
+              </Grid>
+              <Grid item sx={{mt: 4}}>
+                <TextField defaultValue={newPhone} label="Phone" onChange={(e) => {setNewPhone(e.target.value)}} fullWidth></TextField>
+              </Grid>
+              <Grid item>
+                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdatePhone}>CHANGE PHONE</LoadingButton>
               </Grid>
               <Grid item sx={{mt: 4}}>
                 <TextField defaultValue={newLocation} label="Location" onChange={(e) => {setNewLocation(e.target.value)}} fullWidth></TextField>

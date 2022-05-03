@@ -1,24 +1,30 @@
 import axios from 'axios';
 
 export default {
-    async getAllDrugs() {
-        return axios.get('http://localhost:8080/api/queryalldrugs')
+    async getAllUsers() {
+        return axios.get('http://localhost:8080/api/users')
     },
 
-    async addDrug(drug) {
-        return axios.post(`http://localhost:8080/api/adddrug`, drug)
+    async addUser(user) {
+        return axios.post(`http://localhost:8080/api/users`, user)
     },
 
-    async updateHolder(params) {
-        const { id, holder } = params
+    async updateEmail(params) {
+        const { id, email } = params
 
-        return axios.put(`http://localhost:8080/api/changeholder/${id}`,{ holder })
+        return axios.put(`http://localhost:8080/api/user/${id}/email`, { email })
+    },
+
+    async updatePhone(params) {
+        const { id, phone } = params
+
+        return axios.put(`http://localhost:8080/api/user/${id}/phone`, { phone })
     },
 
     async updateLocation(params) {
         const { id, location } = params
 
-        return axios.put(`http://localhost:8080/api/changelocation/${id}`,{ location })
+        return axios.put(`http://localhost:8080/api/user/${id}/location`,{ location })
     }
 
 }

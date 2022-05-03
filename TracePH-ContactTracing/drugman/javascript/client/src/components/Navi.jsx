@@ -9,6 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
+import Divider from '@mui/material/Divider';
 
 export default function Navi() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -46,8 +47,9 @@ export default function Navi() {
             onClose={handleClose}
             TransitionComponent={Fade}
           > 
-              <MenuItem component={Link} to='/' onClick={handleClose}>My Drugs</MenuItem>
-              <MenuItem component={Link} to='/addDrug' onClick={handleClose}>Add Drug</MenuItem>
+              <MenuItem component={Link} to='/' onClick={handleClose}>View Users</MenuItem>
+              <Divider/>
+              <MenuItem component={Link} to='/addUser' onClick={handleClose}>Add User</MenuItem>
           </Menu>
           <Typography
             variant="h6"
@@ -55,7 +57,7 @@ export default function Navi() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Drug Tracer
+            TracePH-ContactTracing
           </Typography>
         </Toolbar>
       </AppBar>

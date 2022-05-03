@@ -1,5 +1,5 @@
 import Home from '../components/Home';
-import AddDrug from '../components/AddDrug';
+import AddUser from '../components/AddUser';
 
 import {
   Routes,
@@ -10,7 +10,7 @@ export default function Router() {
   return (
       <Routes>
           <Route path="/" element={<Home/>} />
-          <Route path="/addDrug" element={<AddDrug/>} />
+          <Route path="/addUser" element={<AddUser/>} />
       </Routes>
   )
 }

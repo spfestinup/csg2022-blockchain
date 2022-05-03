@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import API from '../api/api'
-import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -10,20 +9,18 @@ import {
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 
-export default function AddDrug() {
-  const drugid = ''
-  const drugname = ''
-  const timestamp = dayjs().format("MMM DD, YYYY")
-  const holder = ''
+export default function AddUser() {
+  const userid = ''
+  const email = ''
+  const phone = ''
   const location = ''
   
   const [loading, setLoading] = useState(false)
   const [values, setValues] = useState({
-    drugid,
-    drugname,
-    timestamp,
-    holder,
-    location
+    userid,
+    email,
+    phone,
+    location,
   })
 
   const handleChange = (param) => (event) => {
@@ -36,10 +33,10 @@ export default function AddDrug() {
     try {
       setLoading(true)
 
-      const drug = values
-      console.log(drug)
+      const user = values
+      console.log(user)
 
-      const res = await API.addDrug(drug)
+      const res = await API.addUser(user)
       console.log(res.data)
 
       navigate('/')
@@ -55,20 +52,17 @@ export default function AddDrug() {
       <Grid container direction="column" rowSpacing={2}>
         <Grid item>
           <Typography variant="h2">
-            Add Drug
+            Add User
           </Typography>
         </Grid>
         <Grid item>
-          <TextField label="ID" variant="outlined" fullWidth onChange={handleChange('drugid')} />
+          <TextField label="ID" variant="outlined" fullWidth onChange={handleChange('userid')} />
         </Grid>
         <Grid item>
-          <TextField label="Drug Name" variant="outlined" fullWidth onChange={handleChange('drugname')} />
+          <TextField label="Email" variant="outlined" fullWidth onChange={handleChange('email')} />
         </Grid>
         <Grid item>
-          <TextField defaultValue={timestamp} label="Timestamp" variant="outlined" fullWidth onChange={handleChange('timestamp')} />
-        </Grid>
-        <Grid item>
-          <TextField label="Holder" variant="outlined" fullWidth onChange={handleChange('holder')} />
+          <TextField label="Phone" variant="outlined" fullWidth onChange={handleChange('phone')} />
         </Grid>
         <Grid item>
           <TextField label="Location" variant="outlined" fullWidth onChange={handleChange('location')} />
