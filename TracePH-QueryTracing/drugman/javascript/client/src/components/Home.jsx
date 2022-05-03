@@ -52,12 +52,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function Home() {
     const [loading, setLoading] = useState(false)
     const [updateLoading, setUpdateLoading] = useState(false)
-    const [users, setUsers] = useState([])
-    const [displayedUsers, setDisplayedUsers] = useState([])
-    const [selectedUser, setSelectedUser] = useState({})
-    const [newEmail, setNewEmail] = useState('')
-    const [newPhone, setNewPhone] = useState('')
-    const [newLocation, setNewLocation] = useState('')
+    const [queries, setQueries] = useState([])
+    const [displayedQueries, setDisplayedQueries] = useState([])
+    const [selectedQuery, setSelectedQuery] = useState({})
+    const [newUserId, setNewUserId] = useState('')
+    const [newTimestamp, setNewTimestamp] = useState('')
     const [formDialog, setFormDialog] = React.useState(false);
 
     const navigate = useNavigate()
@@ -66,14 +65,15 @@ export default function Home() {
     useEffect(() => {
         // This is some React trick for useEffect to not show errors
         // https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook
-        async function queryAllUsers() {
+        async function queryAllQueries() {
           try {
             setLoading(true)
-            const res = await API.getAllUsers()
-            const parsedUsers = JSON.parse(res.data.response)
-            setUsers(parsedUsers)
-            setDisplayedUsers(parsedUsers)
+            const res = await API.getAllQueries()
+            const parsedQueries = JSON.parse(res.data.response)
+            setQueries(parsedQueries)
+            setDisplayedQueries(parsedQueries)
             setLoading(false)
+            console.log(parsedQueries)
           }
           catch(e) {
             //TO DO: Display error
@@ -81,31 +81,30 @@ export default function Home() {
           }
         }
         
-        queryAllUsers()
+        queryAllQueries()
     }, [])
 
     function searchTermChange(e) {
       const searchTerm = e.target.value.toLowerCase()
 
       const toDisplay = []
-      for(let user of users) {
-        const email = user.Record.email.toLowerCase()
-        const phone = user.Record.phone.toLowerCase()
-        const location = user.Record.location.toLowerCase()
+      for(let query of queries) {
+        const adminId = query.Record.adminId.toLowerCase()
+        const userId = query.Record.userId.toLowerCase()
+        const timestamp = query.Record.timestamp.toLowerCase()
 
-        if(email.includes(searchTerm) || phone.includes(searchTerm) || location.includes(searchTerm)) {
-          toDisplay.push(user)
+        if(adminId.includes(searchTerm) || userId.includes(searchTerm) || timestamp.includes(searchTerm)) {
+          toDisplay.push(query)
         }
 
-        setDisplayedUsers(toDisplay)
+        setDisplayedQueries(toDisplay)
       }
     }
 
-    const showUser = (user) => (e) => {
-      setSelectedUser(user)
-      setNewEmail(user.Record.email)
-      setNewPhone(user.Record.phone)
-      setNewLocation(user.Record.location)
+    const showQuery = (query) => (e) => {
+      setSelectedQuery(query)
+      setNewUserId(query.Record.userId)
+      setNewTimestamp(query.Record.timestamp)
       
       openFormDialog()
     }
@@ -118,11 +117,11 @@ export default function Home() {
       setFormDialog(false)
     }
 
-    async function doUpdateEmail() {
+    async function doUpdateUserId() {
       try {
         setUpdateLoading(true)
 
-        const res = await API.updateEmail({id: selectedUser.Id, email: newEmail})
+        const res = await API.updateUserId({id: selectedQuery.Id, userid: newUserId})
         console.log(res.data)
 
         navigate(0)
@@ -133,26 +132,11 @@ export default function Home() {
       }
     }
 
-    async function doUpdatePhone() {
+    async function doUpdateTimestamp() {
       try {
         setUpdateLoading(true)
 
-        const res = await API.updatePhone({id: selectedUser.Id, phone: newPhone})
-        console.log(res.data)
-
-        navigate(0)
-      }
-      catch(e) {
-        setUpdateLoading(false)
-        console.log(e)
-      }
-    }
-
-    async function doUpdateLocation() {
-      try {
-        setUpdateLoading(true)
-
-        const res = await API.updateLocation({id: selectedUser.Id, location: newLocation})
+        const res = await API.updateTimestamp({id: selectedQuery.Id, timestamp: newTimestamp})
         console.log(res.data)
 
         navigate(0)
@@ -170,7 +154,7 @@ export default function Home() {
         <Grid container direction="column" rowSpacing={2}>
           <Grid item>
             <Typography variant="h2" sx={{mb: 2}}>
-              Users
+              Queries
             </Typography>
             <TextField
               label="Search"
@@ -190,19 +174,19 @@ export default function Home() {
                 <Table>
                     <TableHead>
                         <TableRow>
+                            <StyledTableCell align="center"> Query ID </StyledTableCell>
+                            <StyledTableCell align="center"> Admin ID </StyledTableCell>
                             <StyledTableCell align="center"> User ID </StyledTableCell>
-                            <StyledTableCell align="center"> Email </StyledTableCell>
-                            <StyledTableCell align="center"> Phone </StyledTableCell>
-                            <StyledTableCell align="center"> Location </StyledTableCell>
+                            <StyledTableCell align="center"> Timestamp </StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {displayedUsers.map(user => (
-                            <StyledTableRow key={user.Id} onClick={showUser(user)}>
-                                <StyledTableCell align="center"> {user.Id} </StyledTableCell>
-                                <StyledTableCell align="center"> {user.Record.email} </StyledTableCell>
-                                <StyledTableCell align="center"> {user.Record.phone} </StyledTableCell>
-                                <StyledTableCell align="center"> {user.Record.location} </StyledTableCell>
+                        {displayedQueries.map(query => (
+                            <StyledTableRow key={query.Id} onClick={showQuery(query)}>
+                                <StyledTableCell align="center"> {query.Id} </StyledTableCell>
+                                <StyledTableCell align="center"> {query.Record.adminId} </StyledTableCell>
+                                <StyledTableCell align="center"> {query.Record.userId} </StyledTableCell>
+                                <StyledTableCell align="center"> {query.Record.timestamp} </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
@@ -210,35 +194,29 @@ export default function Home() {
             </TableContainer>   
           </Grid>
           <Grid item>
-                <Button variant="outlined" href="/addUser" endIcon={<Add/>}> ADD USER </Button>
+                <Button variant="outlined" href="/addQuery" endIcon={<Add/>}> ADD QUERY </Button>
             </Grid>
         </Grid>
         }
         <Dialog open={formDialog} fullWidth>
           <DialogTitle> 
             <Typography variant="h4" component='div'>
-                Change User Info
+                Change Query Info
             </Typography> 
           </DialogTitle>
           <DialogContent>
             <Grid container direction="column" rowSpacing={2}>
               <Grid item sx={{mt: 1}}>
-                <TextField defaultValue={newEmail} label="Email" onChange={(e) => {setNewEmail(e.target.value)}} fullWidth></TextField>
+                <TextField defaultValue={newUserId} label="User ID" onChange={(e) => {setNewUserId(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
-                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateEmail}>CHANGE EMAIL</LoadingButton>
+                <LoadingButton loading={updateLoading} variant="contained" color="warning" onClick={doUpdateUserId}>CHANGE USER ID</LoadingButton>
               </Grid>
               <Grid item sx={{mt: 4}}>
-                <TextField defaultValue={newPhone} label="Phone" onChange={(e) => {setNewPhone(e.target.value)}} fullWidth></TextField>
+                <TextField defaultValue={newTimestamp} label="Phone" onChange={(e) => {setNewTimestamp(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
-                <LoadingButton loading={updateLoading} variant="contained" color="warning" onClick={doUpdatePhone}>CHANGE PHONE</LoadingButton>
-              </Grid>
-              <Grid item sx={{mt: 4}}>
-                <TextField defaultValue={newLocation} label="Location" onChange={(e) => {setNewLocation(e.target.value)}} fullWidth></TextField>
-              </Grid>
-              <Grid item>
-                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateLocation}>CHANGE LOCATION</LoadingButton>
+                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateTimestamp}>CHANGE TIMESTAMP</LoadingButton>
               </Grid>
             </Grid>
           </DialogContent>
