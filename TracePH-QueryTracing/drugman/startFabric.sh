@@ -56,13 +56,7 @@ rm -rf go/wallet/*
 pushd ../test-network
 ./network.sh down
 ./network.sh up createChannel -ca -s couchdb
-
-if [ $USE_EXPLORER = true ]; then
-  ./network.sh deployCC -ccl go -ccn drugs -ccp ../chaincode/drugs/go -cci initLedger
-else
-  ./network.sh deployCC -ccl ${CC_SRC_LANGUAGE} -ccn drugs -ccp ../chaincode/drugs/go -cci initLedger
-fi
-
+./network.sh deployCC -ccl ${CC_SRC_LANGUAGE} -ccn drugs -ccp ../chaincode/drugs/go -cci initLedger
 popd
 
 pushd ./javascript
