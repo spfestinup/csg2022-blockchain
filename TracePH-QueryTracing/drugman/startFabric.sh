@@ -10,8 +10,28 @@ set -e
 # don't rewrite paths for Windows Git Bash users
 export MSYS_NO_PATHCONV=1
 starttime=$(date +%s)
-CC_SRC_LANGUAGE=${1:-"go"}
+
+CC_SRC_LANGUAGE="go"
+USE_EXPLORER=false
+
+# parse flags/optional commands
+while [[ $# -ge 1 ]] ; do
+  key="$1"
+  case $key in
+    explorer )
+      USE_EXPLORER=true
+      ;;
+    * )
+      CC_SRC_LANGUAGE="$key"
+      ;;
+  esac
+  shift
+done
+
 CC_SRC_LANGUAGE=`echo "$CC_SRC_LANGUAGE" | tr [:upper:] [:lower:]`
+
+
+
 if [ "$CC_SRC_LANGUAGE" != "go" -a "$CC_SRC_LANGUAGE" != "golang" -a "$CC_SRC_LANGUAGE" != "java" \
  -a  "$CC_SRC_LANGUAGE" != "javascript"  -a "$CC_SRC_LANGUAGE" != "typescript" -a $1 != "explorer" ] ; then
 
@@ -20,7 +40,7 @@ if [ "$CC_SRC_LANGUAGE" != "go" -a "$CC_SRC_LANGUAGE" != "golang" -a "$CC_SRC_LA
  	exit 1
 fi
 
-if [ "$1" = "explorer" -o "$2" = "explorer" ]; then
+if [ $USE_EXPLORER = true ]; then
   pushd ../explorer
   docker-compose down -v
   popd
@@ -37,7 +57,7 @@ pushd ../test-network
 ./network.sh down
 ./network.sh up createChannel -ca -s couchdb
 
-if [ "$1" = "explorer" -o "$2" = "explorer" ]; then
+if [ $USE_EXPLORER = true ]; then
   ./network.sh deployCC -ccl go -ccn drugs -ccp ../chaincode/drugs/go -cci initLedger
 else
   ./network.sh deployCC -ccl ${CC_SRC_LANGUAGE} -ccn drugs -ccp ../chaincode/drugs/go -cci initLedger
@@ -51,7 +71,7 @@ pushd ./javascript
   node registerUser.js
 popd
 
-if [ "$1" == "explorer" -o "$2" == "explorer" ]; then
+if [ $USE_EXPLORER = true ]; then
   pushd ../explorer
   docker-compose up -d
   popd
