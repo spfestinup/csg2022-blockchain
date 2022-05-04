@@ -3,13 +3,19 @@
 let express = require('express');
 let bodyParser = require('body-parser');
 let app = express();
-app.use(bodyParser.json());
+
 // Setting for Hyperledger Fabric
 const { Wallets, Gateway } = require('fabric-network');
 const path = require('path');
 const fs = require('fs');
+const cors = require('cors');
 const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
 const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+
+const PORT = 8080;
+
+app.use(cors());
+app.use(bodyParser.json());
 
 app.get('/api/users', async function (req, res) {
     try {
@@ -236,4 +242,7 @@ app.put('/api/user/:user_id/email', async function (req, res) {
     }
 });
 
-app.listen(8080);
+app.listen(PORT, () => {
+    console.log('Server is listening on port: ', PORT);
+});
+
