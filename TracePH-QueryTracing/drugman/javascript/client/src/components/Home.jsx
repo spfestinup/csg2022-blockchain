@@ -213,7 +213,7 @@ export default function Home() {
                 <LoadingButton loading={updateLoading} variant="contained" color="warning" onClick={doUpdateUserId}>CHANGE USER ID</LoadingButton>
               </Grid>
               <Grid item sx={{mt: 4}}>
-                <TextField defaultValue={newTimestamp} label="Phone" onChange={(e) => {setNewTimestamp(e.target.value)}} fullWidth></TextField>
+                <TextField defaultValue={newTimestamp} label="Timestamp" onChange={(e) => {setNewTimestamp(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
                 <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateTimestamp}>CHANGE TIMESTAMP</LoadingButton>
