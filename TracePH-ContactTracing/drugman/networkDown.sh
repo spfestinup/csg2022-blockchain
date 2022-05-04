@@ -7,10 +7,15 @@
 # Exit on first error
 set -ex
 
+pushd ../explorer
+docker-compose down -v
+popd
+
 # Bring the test network down
 pushd ../test-network
 ./network.sh down
 popd
+
 
 # clean out any old identites in the wallets
 rm -rf javascript/wallet/*
