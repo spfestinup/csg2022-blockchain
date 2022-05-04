@@ -1,5 +1,4 @@
 # Let's goooooo
-## Steps to run TracePH
 
 ### Notes for Windows
 
@@ -7,81 +6,38 @@
 2. dos2unix everything: ```find . -type f -print0 | xargs -0 dos2unix```
 3. now you can proceed below
 
-### Navigate to folder needed
+# Quick Start
 
 ```bash
-cd TracePH-ContactTracing
-```
-
-or
-
-```bash
-cd TracePH-QueryTracing
-```
-
-### Start the Fabric Test Network
-```bash
+cd TracePH-ContactTracing      # or TracePH-QueryTracing
 cd drugman
-./startFabric.sh
-```
 
-### Start the API server
-```bash
+# start fabric test network
+./startFabric.sh      # if using Hyperledger Explorer, use "./startFabric.sh explorer"
+
+# start API server
 cd javascript
-npm install
-node enrollAdmin.js
-node registerUser.js
 node apiserver.js
-```
-Keep this terminal open.
 
-### Start React app
-Do this in another terminal.
-
-Navigate back to folder needed.
-
-```bash
-cd drugman/javascript/client
+# start react client (use another terminal session)
+cd client
 npm install
 npm start
+
+
+
+# bring down fabric test network (including Hyperledger Explorer)
+./networkDown.sh      # located in drugman folder
 ```
 
-## Stopping TracePH
-Close all terminals.
+## Ports used
 
-Navigate to folder needed.
+- 3000 - React client app
+- 8080 - API server
+- 8081 - Hyperledger Explorer
 
-```bash
-cd drugman
-./networkDown.sh
-```
 
-## Merging branches
+## Hyperledger Explorer credentials
 
-To make use of available branches, create a local branch from `main` and merge all needed branches to the branch.
-
-## Troubleshooting
-
-### ~~Go not found~~ (merged)
-
-#### Recommended Solution
-
-Please see [#3](../../pull/3) (Also see [how to merge a branch](#merging-branches)).
-
-#### Other solutions
-
-If running `sudo ./startFabric.sh` fails due to `go` command not found, try running
-
-```bash
-sudo env "PATH=$PATH" ./startFabric.sh
-```
-
-### ~~Chaincode invoke fails to run due to endorsement issues~~ (merged)
-
-#### Recommended Solution
-
-Please see [#3](../../pull/3) (Also see [how to merge a branch](#merging-branches)).
-
-#### Other solutions
-
-Please see [#2](../../pull/2).
+- **ID:** exploreradmin
+- **Password:** exploreradminpw
