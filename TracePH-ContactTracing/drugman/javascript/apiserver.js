@@ -117,7 +117,7 @@ app.post('/api/users/', async function (req, res) {
         // Submit the specified transaction.
         // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
         // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-        await contract.submitTransaction('createUser', req.body.userid, req.body.location, req.body.phone, req.body.email);
+        await contract.submitTransaction('createUser', req.body.userid, Number(req.body.location), req.body.phone, req.body.email);
         console.log('Transaction has been submitted');
         return res.send('Transaction has been submitted');
         // Disconnect from the gateway.
@@ -155,7 +155,7 @@ app.put('/api/user/:user_id/location', async function (req, res) {
         // Submit the specified transaction.
         // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
         // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-        await contract.submitTransaction('changeUserLocation', req.params.user_id, req.body.location);
+        await contract.submitTransaction('changeUserLocation', req.params.user_id, Number(req.body.location));
         console.log('Transaction has been submitted');
         return res.send('Transaction has been submitted');
         // Disconnect from the gateway.

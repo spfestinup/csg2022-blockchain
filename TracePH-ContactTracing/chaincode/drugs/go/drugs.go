@@ -20,7 +20,7 @@ type SmartContract struct {
 // Car describes basic details of what makes up a car
 type User struct {
 	UserId   string `json:"userId"`
-	Location string `json:"location"`
+	Location int    `json:"location"`
 	Phone    string `json:"phone"`
 	Email    string `json:"email"`
 }
@@ -34,8 +34,8 @@ type QueryResult struct {
 // InitLedger adds a base set of cars to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	users := []User{
-		{UserId: "93b9c9c1-258b-48ee-9810-3acc49850b4b", Location: "Baclaran", Phone: "09123456789", Email: "testemail@gmail.com"},
-		{UserId: "1a25bd3e-8c8e-4a56-a2fe-559fc958168b", Location: "Quezon City", Phone: "090987654321", Email: "testemail2@hotmail.com"},
+		{UserId: "93b9c9c1-258b-48ee-9810-3acc49850b4b", Location: 0, Phone: "09123456789", Email: "testemail@gmail.com"},
+		{UserId: "1a25bd3e-8c8e-4a56-a2fe-559fc958168b", Location: 1, Phone: "090987654321", Email: "testemail2@hotmail.com"},
 	}
 
 	for i, user := range users {
@@ -51,7 +51,7 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 }
 
 // CreateCar adds a new car to the world state with given details
-func (s *SmartContract) CreateUser(ctx contractapi.TransactionContextInterface, userId string, location string, phone string, email string) error {
+func (s *SmartContract) CreateUser(ctx contractapi.TransactionContextInterface, userId string, location int, phone string, email string) error {
 	user := User{
 		UserId:   userId,
 		Location: location,
@@ -114,7 +114,7 @@ func (s *SmartContract) QueryAllUsers(ctx contractapi.TransactionContextInterfac
 }
 
 // ChangeCarOwner updates the owner field of car with given id in world state
-func (s *SmartContract) ChangeUserLocation(ctx contractapi.TransactionContextInterface, userId string, newLocation string) error {
+func (s *SmartContract) ChangeUserLocation(ctx contractapi.TransactionContextInterface, userId string, newLocation int) error {
 	user, err := s.QueryUser(ctx, userId)
 
 	if err != nil {
