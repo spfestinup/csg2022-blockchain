@@ -50,6 +50,22 @@ export default function AddUser() {
     errorText: 'Please input a valid email.'
   }
 
+  const locationValidator = {
+    checker: (location) => {
+      return (location >= 1000 && location <= 1090) || (location >= 2000 && location <= 2047) || (location >= 3000 && location <= 3012) || (location >= 4000 && location <= 4052)
+    },
+    errorText: 'Value is not a valid location number.'
+  }
+
+  const phoneValidator = {
+    checker: (phone) => {
+      const regex = /^\d{11}$/;
+
+      return regex.test(phone)
+    },
+    errorText: 'Please enter a valid number. e.g. 09863457522'
+  }
+
   var IDValidatorObject = {
     valid: useridError,
     setter: setUseridError,
@@ -68,14 +84,14 @@ export default function AddUser() {
     valid: phoneError,
     setter: setPhoneError,
     helperTextSetter: setPhoneHelperText,
-    validators: [requiredValueValidator]
+    validators: [requiredValueValidator, phoneValidator]
   }
 
   var locationValidatorObject = {
     valid: locationError,
     setter: setLocationError,
     helperTextSetter: setLocationHelperText,
-    validators: [requiredValueValidator]
+    validators: [requiredValueValidator, locationValidator]
   }
   
   const inputValidators = [

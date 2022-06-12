@@ -156,7 +156,9 @@ export default function Home() {
         setPhoneError(false)
         setPhoneHelperText('')
 
-        if(newPhone.length > 0) {
+        const regex = /^\d{11}$/
+
+        if(newPhone.length > 0 && regex.test(newPhone)) {
           setUpdateLoading(true)
 
           const res = await API.updatePhone({id: selectedUser.Id, phone: newPhone})
@@ -166,7 +168,7 @@ export default function Home() {
         }
         else {
           setPhoneError(true)
-          setPhoneHelperText('Cannot set empty value.')
+          setPhoneHelperText('Please enter a valid number. e.g. 09863457522')
         }
       }
       catch(e) {
@@ -180,7 +182,11 @@ export default function Home() {
         setLocationError(false)
         setLocationHelperText('')
 
-        if(newLocation.length > 0) {
+        if((newLocation >= 1000 && newLocation <= 1090) || 
+          (newLocation >= 2000 && newLocation <= 2047) || 
+          (newLocation >= 3000 && newLocation <= 3012) || 
+          (newLocation >= 4000 && newLocation <= 4052)
+          ) {
           setUpdateLoading(true)
 
           const res = await API.updateLocation({id: selectedUser.Id, location: newLocation})
@@ -190,7 +196,7 @@ export default function Home() {
         }
         else {
           setLocationError(true)
-          setLocationHelperText('Cannot set empty value.')
+          setLocationHelperText('Invalid location number.')
         }
       }
       catch(e) {
