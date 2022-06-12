@@ -11,6 +11,8 @@ import {
 import { LoadingButton } from '@mui/lab'
 
 export default function AddQuery() {
+  const navigate = useNavigate();
+
   const queryid = ''
   const userid = ''
   const adminid = ''
@@ -24,30 +26,121 @@ export default function AddQuery() {
     timestamp
   })
 
+  const [useridError, setUseridError] = useState(true)
+  const [queryidError, setQueryidError] = useState(true)
+  const [adminidError, setAdminidError] = useState(true)
+  const [timestampError, setTimestampError] = useState(true)
+
+  const [useridHelperText, setUseridHelperText] = useState('')
+  const [queryidHelperText, setQueryidHelperText] = useState('')
+  const [adminidHelperText, setAdminidHelperText] = useState('')
+  const [timestampHelperText, setTimestampHelperText] = useState('')
+
+  const requiredValueValidator = {
+    checker: (value) => {
+      return value.length > 0
+    },
+    errorText: 'This value is required.'
+  }
+
+  var userIDValidatorObject = {
+    valid: useridError,
+    setter: setUseridError,
+    helperTextSetter: setUseridHelperText,
+    validators: [requiredValueValidator]
+  }
+
+  var queryIDValidatorObject = {
+    valid: queryidError,
+    setter: setQueryidError,
+    helperTextSetter: setQueryidHelperText,
+    validators: [requiredValueValidator]
+  }
+
+  var adminIDValidatorObject = {
+    valid: adminidError,
+    setter: setAdminidError,
+    helperTextSetter: setAdminidHelperText,
+    validators: [requiredValueValidator]
+  }
+
+  var timestampValidatorObject = {
+    valid: timestampError,
+    setter: setTimestampError,
+    helperTextSetter: setTimestampHelperText,
+    validators: [requiredValueValidator]
+  }
+  
+  const inputValidators = [
+    {
+      fieldName: 'userid',
+      validatorObject: userIDValidatorObject 
+    },
+    {
+      fieldName: 'queryid',
+      validatorObject: queryIDValidatorObject 
+    },
+    {
+      fieldName: 'adminid',
+      validatorObject: adminIDValidatorObject 
+    },
+    {
+      fieldName: 'timestamp',
+      validatorObject: timestampValidatorObject 
+    },
+  ]
+
+  function validateValue(value, validatorObject) {
+    for(let validator of validatorObject.validators) {
+      // Reset valid value back to true
+      validatorObject.setter(true)
+      validatorObject.helperTextSetter('')
+
+      if(!validator.checker(value)) {
+        validatorObject.setter(false)
+        validatorObject.helperTextSetter(validator.errorText)
+
+        return false
+      }
+    }
+
+    return true
+  }
+
+  function validateInput(values) {
+    var allInputValid = true
+
+    for(let validatorObject of inputValidators) {
+      if(!validateValue(values[validatorObject.fieldName], validatorObject.validatorObject)) {
+        allInputValid = false
+      }
+    }
+
+    return allInputValid
+  }
+
   const handleChange = (param) => (event) => {
     setValues({ ...values, [param]: event.target.value });
   }
 
-  const navigate = useNavigate();
-  
   async function doAdd() {
     try {
-      setLoading(true)
-
       const query = values
-      console.log(query)
 
-      const res = await API.addQuery(query)
-      console.log(res.data)
+      if(validateInput(query)) {
+        setLoading(true)
 
-      navigate('/')
+        const res = await API.addQuery(query)
+
+        navigate('/')
+      }  
     }
     catch(e) {
       setLoading(false)
       console.log(e)
     }
   }
-
+  
   return (
     <Container>
       <Grid container direction="column" rowSpacing={2}>
@@ -57,16 +150,16 @@ export default function AddQuery() {
           </Typography>
         </Grid>
         <Grid item>
-          <TextField label="Query ID" variant="outlined" fullWidth onChange={handleChange('queryid')} />
+          <TextField label="Query ID" error={!queryIDValidatorObject.valid} helperText={queryidHelperText}  variant="outlined" fullWidth onChange={handleChange('queryid')} />
         </Grid>
         <Grid item>
-          <TextField label="Admin ID" variant="outlined" fullWidth onChange={handleChange('adminid')} />
+          <TextField label="Admin ID" error={!adminIDValidatorObject.valid} helperText={adminidHelperText}  variant="outlined" fullWidth onChange={handleChange('adminid')} />
         </Grid>
         <Grid item>
-          <TextField label="User ID" variant="outlined" fullWidth onChange={handleChange('userid')} />
+          <TextField label="User ID" error={!userIDValidatorObject.valid} helperText={useridHelperText}  variant="outlined" fullWidth onChange={handleChange('userid')} />
         </Grid>
         <Grid item>
-          <TextField defaultValue={timestamp} label="Timestamp" variant="outlined" fullWidth onChange={handleChange('timestamp')} />
+          <TextField defaultValue={timestamp} error={!timestampValidatorObject.valid} helperText={timestampHelperText}  label="Timestamp" variant="outlined" fullWidth onChange={handleChange('timestamp')} />
         </Grid>
         <Grid item>
           <LoadingButton loading={loading} variant="contained" color="success" onClick={doAdd}> SUBMIT </LoadingButton>

@@ -10,6 +10,8 @@ import {
 import { LoadingButton } from '@mui/lab'
 
 export default function AddUser() {
+  const navigate = useNavigate();
+
   const userid = ''
   const email = ''
   const phone = ''
@@ -95,12 +97,6 @@ export default function AddUser() {
     },
   ]
 
-  const handleChange = (param) => (event) => {
-    setValues({ ...values, [param]: event.target.value });
-  }
-
-  const navigate = useNavigate();
-  
   function validateValue(value, validatorObject) {
     for(let validator of validatorObject.validators) {
       // Reset valid value back to true
@@ -130,6 +126,10 @@ export default function AddUser() {
     return allInputValid
   }
 
+  const handleChange = (param) => (event) => {
+    setValues({ ...values, [param]: event.target.value });
+  }
+
   async function doAdd() {
     try {
       const user = values
@@ -147,7 +147,7 @@ export default function AddUser() {
       console.log(e)
     }
   }
-
+  
   return (
     <Container>
       <Grid container direction="column" rowSpacing={2}>

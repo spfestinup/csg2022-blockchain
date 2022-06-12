@@ -50,6 +50,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function Home() {
+    const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [updateLoading, setUpdateLoading] = useState(false)
     const [queries, setQueries] = useState([])
@@ -57,9 +58,13 @@ export default function Home() {
     const [selectedQuery, setSelectedQuery] = useState({})
     const [newUserId, setNewUserId] = useState('')
     const [newTimestamp, setNewTimestamp] = useState('')
-    const [formDialog, setFormDialog] = React.useState(false);
+    const [formDialog, setFormDialog] = useState(false);
 
-    const navigate = useNavigate()
+    const [useridError, setUseridError] = useState(false)
+    const [timestampError, setTimestampError] = useState(false)
+
+    const [useridHelperText, setUseridHelperText] = useState('')
+    const [timestampHelperText, setTimestampHelperText] = useState('')
 
     //componentDidMount
     useEffect(() => {
@@ -119,12 +124,20 @@ export default function Home() {
 
     async function doUpdateUserId() {
       try {
-        setUpdateLoading(true)
+        setUseridError(false)
+        setUseridHelperText('false')
 
-        const res = await API.updateUserId({id: selectedQuery.Id, userid: newUserId})
-        console.log(res.data)
+        if(newUserId.length > 0) {
+          setUpdateLoading(true)
 
-        navigate(0)
+          const res = await API.updateUserId({id: selectedQuery.Id, userid: newUserId})
+
+          navigate(0)
+        }
+        else {
+          setUseridError(true)
+          setUseridHelperText('Cannot set empty user ID.')
+        }
       }
       catch(e) {
         setUpdateLoading(false)
@@ -134,12 +147,19 @@ export default function Home() {
 
     async function doUpdateTimestamp() {
       try {
-        setUpdateLoading(true)
+        setTimestampError(false)
+        setTimestampHelperText('')
 
-        const res = await API.updateTimestamp({id: selectedQuery.Id, timestamp: newTimestamp})
-        console.log(res.data)
+        if(newTimestamp.length > 0) {
+          setUpdateLoading(true)
 
-        navigate(0)
+          const res = await API.updateTimestamp({id: selectedQuery.Id, timestamp: newTimestamp})
+          navigate(0)
+        }
+        else {
+          setTimestampError(true)
+          setTimestampHelperText('Cannot set empty Timestamp.')
+        }        
       }
       catch(e) {
         setUpdateLoading(false)
@@ -207,13 +227,13 @@ export default function Home() {
           <DialogContent>
             <Grid container direction="column" rowSpacing={2}>
               <Grid item sx={{mt: 1}}>
-                <TextField defaultValue={newUserId} label="User ID" onChange={(e) => {setNewUserId(e.target.value)}} fullWidth></TextField>
+                <TextField defaultValue={newUserId} label="User ID" error={useridError} helperText={useridHelperText} onChange={(e) => {setNewUserId(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
                 <LoadingButton loading={updateLoading} variant="contained" color="warning" onClick={doUpdateUserId}>CHANGE USER ID</LoadingButton>
               </Grid>
               <Grid item sx={{mt: 4}}>
-                <TextField defaultValue={newTimestamp} label="Timestamp" onChange={(e) => {setNewTimestamp(e.target.value)}} fullWidth></TextField>
+                <TextField defaultValue={newTimestamp} error={timestampError} helperText={timestampHelperText} label="Timestamp" onChange={(e) => {setNewTimestamp(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
                 <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateTimestamp}>CHANGE TIMESTAMP</LoadingButton>
