@@ -125,7 +125,7 @@ export default function Home() {
     async function doUpdateUserId() {
       try {
         setUseridError(false)
-        setUseridHelperText('false')
+        setUseridHelperText('')
 
         if(newUserId.length > 0) {
           setUpdateLoading(true)
