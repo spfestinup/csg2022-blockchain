@@ -10,15 +10,40 @@ set -e
 # don't rewrite paths for Windows Git Bash users
 export MSYS_NO_PATHCONV=1
 starttime=$(date +%s)
-CC_SRC_LANGUAGE=${1:-"go"}
+
+CC_SRC_LANGUAGE="go"
+USE_EXPLORER=false
+
+# parse flags/optional commands
+while [[ $# -ge 1 ]] ; do
+  key="$1"
+  case $key in
+    explorer )
+      USE_EXPLORER=true
+      ;;
+    * )
+      CC_SRC_LANGUAGE="$key"
+      ;;
+  esac
+  shift
+done
+
 CC_SRC_LANGUAGE=`echo "$CC_SRC_LANGUAGE" | tr [:upper:] [:lower:]`
+
+
+
 if [ "$CC_SRC_LANGUAGE" != "go" -a "$CC_SRC_LANGUAGE" != "golang" -a "$CC_SRC_LANGUAGE" != "java" \
  -a  "$CC_SRC_LANGUAGE" != "javascript"  -a "$CC_SRC_LANGUAGE" != "typescript" ] ; then
 
 	echo The chaincode language ${CC_SRC_LANGUAGE} is not supported by this script
  	echo Supported chaincode languages are: go, java, javascript, and typescript
  	exit 1
+fi
 
+if [ $USE_EXPLORER = true ]; then
+  pushd ../explorer
+  docker-compose down -v
+  popd
 fi
 
 # clean out any old identites in the wallets
@@ -33,6 +58,18 @@ pushd ../test-network
 ./network.sh up createChannel -ca -s couchdb
 ./network.sh deployCC -ccl ${CC_SRC_LANGUAGE} -ccn drugs -ccp ../chaincode/drugs/go -cci initLedger
 popd
+
+pushd ./javascript
+  npm install
+  node enrollAdmin.js
+  node registerUser.js
+popd
+
+if [ $USE_EXPLORER = true ]; then
+  pushd ../explorer
+  docker-compose up -d
+  popd
+fi
 
 cat <<EOF
 
