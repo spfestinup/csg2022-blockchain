@@ -226,7 +226,7 @@ export default function Home() {
                 <TextField defaultValue={newEmail} label="Email" onChange={(e) => {setNewEmail(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
-                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateEmail}>CHANGE EMAIL</LoadingButton>
+                <LoadingButton loading={updateLoading} variant="contained" color="primary" onClick={doUpdateEmail}>CHANGE EMAIL</LoadingButton>
               </Grid>
               <Grid item sx={{mt: 4}}>
                 <TextField defaultValue={newPhone} label="Phone" onChange={(e) => {setNewPhone(e.target.value)}} fullWidth></TextField>
@@ -238,7 +238,7 @@ export default function Home() {
                 <TextField defaultValue={newLocation} label="Location" onChange={(e) => {setNewLocation(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
-                <LoadingButton loading={updateLoading} variant="contained" color="success" onClick={doUpdateLocation}>CHANGE LOCATION</LoadingButton>
+                <LoadingButton loading={updateLoading} variant="contained" color="secondary" onClick={doUpdateLocation}>CHANGE LOCATION</LoadingButton>
               </Grid>
             </Grid>
           </DialogContent>
