@@ -50,6 +50,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function Home() {
+    const navigate = useNavigate()
+
     const [loading, setLoading] = useState(false)
     const [updateLoading, setUpdateLoading] = useState(false)
     const [users, setUsers] = useState([])
@@ -58,9 +60,15 @@ export default function Home() {
     const [newEmail, setNewEmail] = useState('')
     const [newPhone, setNewPhone] = useState('')
     const [newLocation, setNewLocation] = useState('')
-    const [formDialog, setFormDialog] = React.useState(false);
+    const [formDialog, setFormDialog] = useState(false);
 
-    const navigate = useNavigate()
+    const [emailError, setEmailError] = useState(false)
+    const [phoneError, setPhoneError] = useState(false)
+    const [locationError, setLocationError] = useState(false)
+  
+    const [emailHelperText, setEmailHelperText] = useState('')
+    const [phoneHelperText, setPhoneHelperText] = useState('')
+    const [locationHelperText, setLocationHelperText] = useState('')
 
     //componentDidMount
     useEffect(() => {
@@ -120,12 +128,22 @@ export default function Home() {
 
     async function doUpdateEmail() {
       try {
-        setUpdateLoading(true)
+        setEmailError(false)
+        setEmailHelperText('')
 
-        const res = await API.updateEmail({id: selectedUser.Id, email: newEmail})
-        console.log(res.data)
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(re.test(String(newEmail).toLowerCase())) {
+          setUpdateLoading(true)
 
-        navigate(0)
+          const res = await API.updateEmail({id: selectedUser.Id, email: newEmail})
+          console.log(res.data)
+
+          navigate(0)
+        }
+        else {
+          setEmailError(true)
+          setEmailHelperText('Please enter a valid email.')
+        }
       }
       catch(e) {
         setUpdateLoading(false)
@@ -135,12 +153,21 @@ export default function Home() {
 
     async function doUpdatePhone() {
       try {
-        setUpdateLoading(true)
+        setPhoneError(false)
+        setPhoneHelperText('')
 
-        const res = await API.updatePhone({id: selectedUser.Id, phone: newPhone})
-        console.log(res.data)
+        if(newPhone.length > 0) {
+          setUpdateLoading(true)
 
-        navigate(0)
+          const res = await API.updatePhone({id: selectedUser.Id, phone: newPhone})
+          console.log(res.data)
+
+          navigate(0)
+        }
+        else {
+          setPhoneError(true)
+          setPhoneHelperText('Cannot set empty value.')
+        }
       }
       catch(e) {
         setUpdateLoading(false)
@@ -150,12 +177,21 @@ export default function Home() {
 
     async function doUpdateLocation() {
       try {
-        setUpdateLoading(true)
+        setLocationError(false)
+        setLocationHelperText('')
 
-        const res = await API.updateLocation({id: selectedUser.Id, location: newLocation})
-        console.log(res.data)
+        if(newLocation.length > 0) {
+          setUpdateLoading(true)
 
-        navigate(0)
+          const res = await API.updateLocation({id: selectedUser.Id, location: newLocation})
+          console.log(res.data)
+
+          navigate(0)
+        }
+        else {
+          setLocationError(true)
+          setLocationHelperText('Cannot set empty value.')
+        }
       }
       catch(e) {
         setUpdateLoading(false)
@@ -223,19 +259,19 @@ export default function Home() {
           <DialogContent>
             <Grid container direction="column" rowSpacing={2}>
               <Grid item sx={{mt: 1}}>
-                <TextField defaultValue={newEmail} label="Email" onChange={(e) => {setNewEmail(e.target.value)}} fullWidth></TextField>
+                <TextField defaultValue={newEmail} label="Email" error={emailError} helperText={emailHelperText} onChange={(e) => {setNewEmail(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
                 <LoadingButton loading={updateLoading} variant="contained" color="primary" onClick={doUpdateEmail}>CHANGE EMAIL</LoadingButton>
               </Grid>
               <Grid item sx={{mt: 4}}>
-                <TextField defaultValue={newPhone} label="Phone" onChange={(e) => {setNewPhone(e.target.value)}} fullWidth></TextField>
+                <TextField defaultValue={newPhone} label="Phone" error={phoneError} helperText={phoneHelperText} onChange={(e) => {setNewPhone(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
                 <LoadingButton loading={updateLoading} variant="contained" color="warning" onClick={doUpdatePhone}>CHANGE PHONE</LoadingButton>
               </Grid>
               <Grid item sx={{mt: 4}}>
-                <TextField defaultValue={newLocation} label="Location" onChange={(e) => {setNewLocation(e.target.value)}} fullWidth></TextField>
+                <TextField defaultValue={newLocation} label="Location" error={locationError} helperText={locationHelperText} onChange={(e) => {setNewLocation(e.target.value)}} fullWidth></TextField>
               </Grid>
               <Grid item>
                 <LoadingButton loading={updateLoading} variant="contained" color="secondary" onClick={doUpdateLocation}>CHANGE LOCATION</LoadingButton>
